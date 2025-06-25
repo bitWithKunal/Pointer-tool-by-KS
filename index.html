@@ -1,0 +1,6038 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kunal’s Pointer Blitz: C Memory Mastered</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --bg-dark: #121212;
+      --bg-darker: #0a0a0a;
+      --bg-light: #1e1e1e;
+      --accent: #f1c40f;
+      --accent-dark: #d4ac0d;
+      --text-primary: #f0f0f0;
+      --text-secondary: #b0b0b0;
+      --border: #333;
+      --code-bg: #252525;
+      --nav-width: 280px;
+      --header-height: 80px;
+    }
+
+    .manual-button {
+    background-color: #4a5568; /* Different color for visibility */
+}
+
+.manual-button:hover {
+    background-color: #2d3748;
+}
+
+/* Manual Modal Styles */
+#manualModal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 2000;
+    overflow-y: auto;
+}
+
+#view-counter {
+  display: flex;
+  align-items: center;
+  background: none;
+  color: var(--text-secondary);
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+#view-counter:hover {
+  background: var(--bg-light);
+  color: var(--accent);
+}
+
+#view-counter i {
+  color: var(--text-secondary);
+}
+
+#view-counter:hover i {
+  color: var(--accent);
+}
+
+.manual-content {
+    background: var(--bg-darker);
+    margin: 5% auto;
+    padding: 30px;
+    width: 80%;
+    max-width: 900px;
+    border-radius: 8px;
+    border: 2px solid var(--accent);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+.close-manual {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    cursor: pointer;
+}
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      line-height: 1.7;
+      background: var(--bg-dark);
+      color: var(--text-primary);
+      display: flex;
+      min-height: 100vh;
+    }
+    /* Social/Feedback Buttons - Updated to match theme */
+.social-button {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.social-button:hover {
+    background: var(--bg-light);
+    color: var(--accent); /* Now using your theme's yellow */
+}
+
+/* Specific hover colors removed - using theme yellow instead */
+.social-button i {
+    font-size: 1rem;
+    color: var(--text-secondary); /* Match text color */
+}
+
+.social-button:hover i {
+    color: var(--accent); /* Yellow on hover */
+}
+
+.social-button span {
+    display: none;
+}
+
+/* Show text on larger screens */
+@media (min-width: 768px) {
+    .social-button span {
+        display: inline;
+    }
+}
+
+/* Adjust header spacing */
+.header-actions {
+    display: flex;
+    gap: 12px; /* Slightly more spacing */
+    align-items: center;
+}
+
+    /* Modular Header */
+    .header-module {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: var(--header-height);
+      background: var(--bg-darker);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 30px;
+      border-bottom: 1px solid var(--border);
+      z-index: 1000;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+    }
+
+    .header-title {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .header-title h1 {
+      font-size: 1.5rem;
+      color: var(--accent);
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+    }
+
+    /* Navigation */
+    nav {
+      width: var(--nav-width);
+      background: var(--bg-darker);
+      padding: 30px 15px;
+      position: fixed;
+      top: var(--header-height);
+      bottom: 0;
+      left: 0;
+      overflow-y: auto;
+      border-right: 1px solid var(--border);
+      transition: all 0.3s ease;
+    }
+
+    .nav-section {
+      margin-bottom: 25px;
+    }
+
+    .nav-section h3 {
+      color: var(--accent);
+      font-size: 1rem;
+      margin-bottom: 10px;
+      padding-left: 10px;
+      border-left: 3px solid var(--accent);
+    }
+
+    nav a {
+      color: var(--text-secondary);
+      display: block;
+      padding: 8px 15px;
+      text-decoration: none;
+      font-size: 0.9em;
+      border-radius: 4px;
+      margin: 5px 0;
+      transition: all 0.2s ease;
+    }
+
+    nav a:hover {
+      background: var(--bg-light);
+      color: var(--accent);
+    }
+
+    nav a.active {
+      background: var(--bg-light);
+      color: var(--accent);
+      font-weight: bold;
+    }
+
+    /* Main Content */
+    .main-content {
+      margin-left: var(--nav-width);
+      margin-top: var(--header-height);
+      padding: 30px;
+      flex: 1;
+      max-width: 1000px;
+    }
+
+    /* Typography */
+    h1, h2, h3, h4 {
+      color: var(--accent);
+      margin-bottom: 15px;
+    }
+
+    h1 { font-size: 2.2rem; }
+    h2 {
+      font-size: 1.8rem;
+      padding-bottom: 10px;
+      border-bottom: 2px solid var(--accent-dark);
+      margin-top: 40px;
+    }
+    h3 { font-size: 1.4rem; margin-top: 30px; }
+    h4 { font-size: 1.2rem; margin-top: 20px; }
+
+    p {
+      margin-bottom: 15px;
+      color: var(--text-primary);
+    }
+
+    ul, ol {
+      margin-bottom: 20px;
+      padding-left: 25px;
+    }
+
+    li {
+      margin-bottom: 8px;
+      color: var(--text-secondary);
+    }
+
+    /* Code Blocks */
+    code {
+      font-family: 'Fira Code', monospace;
+      background: var(--code-bg);
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: var(--accent);
+      font-size: 0.9em;
+    }
+
+    pre {
+      font-family: 'Fira Code', monospace;
+      background: var(--code-bg);
+      padding: 15px;
+      border-radius: 8px;
+      overflow-x: auto;
+      margin: 20px 0;
+      border-left: 4px solid var(--accent);
+      position: relative;
+    }
+
+    pre:before {
+      content: attr(data-title);
+      position: absolute;
+      top: 0;
+      left: 0;
+      background: var(--accent);
+      color: var(--bg-dark);
+      padding: 2px 10px;
+      font-size: 0.8em;
+      border-bottom-right-radius: 4px;
+    }
+
+    /* Syntax highlighting */
+    .keyword { color: #569cd6; }
+    .string { color: #ce9178; }
+    .comment { color: #6a9955; font-style: italic; }
+    .type { color: #4ec9b0; }
+    .preprocessor { color: #c586c0; }
+
+    /* Examples */
+    .example {
+      background: var(--bg-light);
+      padding: 20px;
+      border-radius: 8px;
+      margin: 25px 0;
+      border: 1px solid var(--border);
+    }
+
+    .example-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 15px;
+      color: var(--accent);
+    }
+
+    .explanation {
+      background: var(--bg-darker);
+      padding: 15px;
+      border-radius: 6px;
+      margin-top: 15px;
+    }
+
+    /* Special Boxes */
+    .info-box, .warning-box, .tip-box {
+      padding: 15px;
+      border-radius: 6px;
+      margin: 20px 0;
+      border-left: 4px solid;
+    }
+
+    .info-box {
+      background: rgba(75, 150, 230, 0.1);
+      border-color: #4b96e6;
+    }
+
+    .warning-box {
+      background: rgba(230, 75, 75, 0.1);
+      border-color: #e64b4b;
+    }
+
+    .tip-box {
+      background: rgba(75, 230, 150, 0.1);
+      border-color: #4be696;
+    }
+
+    .box-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      background: var(--bg-light);
+    }
+
+    th, td {
+      padding: 12px 15px;
+      text-align: left;
+      border: 1px solid var(--border);
+    }
+
+    th {
+      background: var(--bg-darker);
+      color: var(--accent);
+    }
+
+    /* Interview Questions */
+    .interview-questions {
+      position: fixed;
+      top: var(--header-height);
+      right: 0;
+      width: 300px;
+      bottom: 0;
+      padding: 20px;
+      background: var(--bg-darker);
+      border-left: 1px solid var(--border);
+      overflow-y: auto;
+    }
+
+    .interview-questions h3 {
+      color: var(--accent);
+      margin-bottom: 15px;
+      padding-bottom: 5px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .question {
+      margin-bottom: 15px;
+      padding: 10px;
+      background: var(--bg-light);
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .question:hover {
+      background: var(--code-bg);
+    }
+
+    .answer {
+      display: none;
+      padding: 10px;
+      background: var(--bg-dark);
+      border-radius: 6px;
+      margin-top: 5px;
+      color: var(--text-secondary);
+    }
+    const manualStyles = `
+#manualModal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    z-index: 9999;
+    display: none;
+    overflow-y: auto;
+}
+
+.manual-content {
+    background: var(--bg-darker);
+    margin: 2% auto;
+    padding: 2rem;
+    width: 85%;
+    max-width: 800px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.6);
+}
+
+.manual-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.manual-header h2 {
+    color: var(--accent);
+    margin: 0;
+    font-size: 1.5rem;
+}
+
+.version-tag {
+    background: var(--accent);
+    color: var(--bg-dark);
+    padding: 0.2rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+
+.close-manual {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    color: var(--text-secondary);
+    font-size: 2rem;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.close-manual:hover {
+    color: var(--accent);
+}
+
+.manual-tabs {
+    display: flex;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.tab-btn {
+    background: none;
+    border: none;
+    padding: 0.5rem 1.5rem;
+    color: var(--text-secondary);
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s;
+}
+
+.tab-btn.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+}
+
+.manual-section {
+    margin-bottom: 2rem;
+}
+
+.manual-section h3 {
+    color: var(--accent);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.manual-features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin: 1.5rem 0;
+}
+
+.feature {
+    background: var(--bg-light);
+    padding: 1rem;
+    border-radius: 6px;
+    border-left: 3px solid var(--accent);
+}
+
+.feature i {
+    color: var(--accent);
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.nav-guide {
+    margin: 1.5rem 0;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    padding: 0.8rem;
+    background: var(--bg-light);
+    border-radius: 6px;
+}
+
+.nav-item i {
+    color: var(--accent);
+    font-size: 1.2rem;
+}
+
+.pathway {
+    background: var(--bg-light);
+    padding: 1rem;
+    border-radius: 6px;
+    margin-bottom: 1rem;
+}
+
+.pathway h4 {
+    color: var(--accent);
+    margin-top: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.shortcut-list {
+    margin: 1.5rem 0;
+}
+
+.shortcut-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    padding: 0.8rem;
+    background: var(--bg-light);
+    border-radius: 6px;
+}
+
+.shortcut-item kbd {
+    background: var(--accent-dark);
+    color: var(--bg-dark);
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    font-family: monospace;
+}
+
+.contact-methods {
+    margin: 1.5rem 0;
+}
+
+.contact-link {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    color: var(--accent);
+    text-decoration: none;
+    margin-bottom: 1rem;
+    padding: 0.8rem;
+    background: var(--bg-light);
+    border-radius: 6px;
+    transition: background 0.2s;
+}
+
+.contact-link:hover {
+    background: var(--code-bg);
+}
+
+.feedback-note {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    background: var(--bg-light);
+    padding: 1rem;
+    border-radius: 6px;
+    margin-top: 1.5rem;
+}
+
+.feedback-note i {
+    color: var(--accent);
+}
+
+@media (max-width: 768px) {
+    .manual-content {
+        width: 95%;
+        padding: 1rem;
+    }
+
+    .manual-features {
+        grid-template-columns: 1fr;
+    }
+}
+`;
+
+
+    /* Theme Toggle */
+    .theme-toggle {
+      background: var(--accent);
+      color: var(--bg-dark);
+      border: none;
+      padding: 8px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .theme-toggle:hover {
+      background: var(--accent-dark);
+    }
+
+    /* Responsive */
+    @media (max-width: 1200px) {
+      .interview-questions {
+        display: none;
+      }
+    }
+
+    @media (max-width: 768px) {
+      :root {
+        --nav-width: 0;
+      }
+
+      nav {
+        transform: translateX(-100%);
+        z-index: 900;
+      }
+
+      nav.active {
+        transform: translateX(0);
+      }
+
+      .main-content {
+        margin-left: 0;
+      }
+
+      .menu-toggle {
+        display: block;
+      }
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    section {
+      animation: fadeIn 0.5s ease-out;
+    }
+  </style>
+</head>
+<body>
+  <!-- Modular Header -->
+  <header class="header-module">
+  <div class="header-title">
+    <i class="fas fa-microchip fa-lg text-yellow-400"></i>
+    <h1 class="text-xl font-bold text-yellow-400">Kunal’s Pointer Blitz: C Memory Mastered</h1>
+  </div>
+
+
+  <div class="header-actions">
+    <!-- LinkedIn Button -->
+    <a href="https://www.linkedin.com/in/kunalsaraswat" target="_blank" class="social-button linkedin-button" title="Connect on LinkedIn">
+      <i class="fab fa-linkedin text-blue-400"></i>
+      <span>LinkedIn</span>
+    </a>
+
+    <!-- Manual Button -->
+    <button onclick="showManual()" class="social-button manual-button" title="Open Manual">
+      <i class="fas fa-book text-green-400"></i>
+      <span>Manual</span>
+    </button>
+
+    <!-- Feedback Button -->
+    <button onclick="sendFeedbackEmail()" class="social-button feedback-button" title="Send Feedback">
+      <i class="fas fa-envelope text-pink-400"></i>
+      <span>Feedback</span>
+    </button>
+  </div>
+</header>
+
+  <!-- Navigation -->
+<nav id="mainNav" class="p-4 bg-gray-100 rounded-lg shadow-md">
+  <!-- Core Concepts -->
+  <div class="nav-section mb-4">
+    <h3 class="text-lg font-semibold mb-2">Core Concepts</h3>
+    <a href="#intro" class="block mb-1">Introduction</a>
+    <a href="#arithmetic" class="block mb-1">Pointer Arithmetic</a>
+    <a href="#arrays" class="block mb-1">Pointers & Arrays</a>
+    <a href="#functions" class="block mb-1">Pointers & Functions</a>
+  </div>
+
+  <!-- Advanced Topics -->
+  <div class="nav-section mb-4">
+    <h3 class="text-lg font-semibold mb-2">Advanced Topics</h3>
+    <a href="#strings" class="block mb-1">Pointers & Strings</a>
+    <a href="#dynamic" class="block mb-1">Dynamic Memory</a>
+    <a href="#structs" class="block mb-1">Pointers to Structs</a>
+    <a href="#typecast" class="block mb-1">Pointer Typecasting</a>
+  </div>
+
+  <!-- Special Cases -->
+  <div class="nav-section mb-4">
+    <h3 class="text-lg font-semibold mb-2">Special Cases</h3>
+    <a href="#null" class="block mb-1">Null Pointers</a>
+    <a href="#dangling" class="block mb-1">Dangling Pointers</a>
+    <a href="#const" class="block mb-1">Const Qualifier</a>
+    <a href="#volatile" class="block mb-1">Volatile Qualifier</a>
+  </div>
+
+  <!-- Memory Management -->
+  <div class="nav-section mb-4">
+    <h3 class="text-lg font-semibold mb-2">Memory Management</h3>
+    <a href="#bitwise" class="block mb-1">Bitwise Operations</a>
+    <a href="#debug" class="block mb-1">Debugging</a>
+    <a href="#multiarrays" class="block mb-1">Multi-dimensional Arrays</a>
+  </div>
+
+  <!-- Animations -->
+  <div class="nav-section">
+    <h3 class="text-lg font-semibold mb-2">Extras</h3>
+    <a href="#pointer-animation" class="block" onclick="showSection('pointer-animation')">Pointer Animations</a>
+  </div>
+</nav>
+
+  <!-- Main Content -->
+  <!-- Main Content -->
+  <main class="main-content">
+    <section id="intro">
+      <h2>1. Introduction to Pointers</h2>
+
+      <div class="info-box">
+        <div class="box-title">
+          <i class="fas fa-info-circle"></i> Key Concept
+        </div>
+        <p>A pointer is a variable that stores a memory address. Unlike regular variables that hold values, pointers hold locations where values are stored. This indirection enables powerful programming techniques but requires careful management.</p>
+      </div>
+
+      <h3>What is a Pointer?</h3>
+      <p>Pointers are fundamental to C programming, providing direct memory access and enabling:</p>
+      <ul>
+        <li>Efficient array and string manipulation</li>
+        <li>Dynamic memory allocation</li>
+        <li>Implementation of complex data structures</li>
+        <li>Pass-by-reference function parameters</li>
+        <li>Low-level hardware interaction</li>
+      </ul>
+
+      <div class="tip-box">
+        <div class="box-title">
+          <i class="fas fa-lightbulb"></i> Memory Visualization
+        </div>
+        <p>Imagine memory as a series of mailboxes, each with a unique address. A pointer is like a note containing the address of another mailbox where the actual data resides.</p>
+      </div>
+
+      <h3>Pointer Declaration and Initialization</h3>
+      <p>Pointers are declared with a type and the dereference operator (*):</p>
+
+      <pre data-title="Declaration Examples"><code class="language-c">int *int_ptr;       // Pointer to integer
+char *char_ptr;     // Pointer to character
+float *float_ptr;   // Pointer to float
+void *void_ptr;     // Generic pointer (no type)
+int **ptr_to_ptr;   // Pointer to pointer to int</code></pre>
+
+      <div class="warning-box">
+        <div class="box-title">
+          <i class="fas fa-exclamation-triangle"></i> Critical Note
+        </div>
+        <p>Always initialize pointers before use. An uninitialized pointer contains garbage and may point to any memory location, leading to undefined behavior if dereferenced.</p>
+      </div>
+
+      <h3>Pointer Operators</h3>
+      <p>C provides two fundamental pointer operators:</p>
+
+      <table>
+        <tr>
+          <th>Operator</th>
+          <th>Name</th>
+          <th>Purpose</th>
+          <th>Example</th>
+        </tr>
+        <tr>
+          <td>&</td>
+          <td>Address-of</td>
+          <td>Returns memory address of a variable</td>
+          <td><code>int x; int *p = &x;</code></td>
+        </tr>
+        <tr>
+          <td>*</td>
+          <td>Dereference</td>
+          <td>Accesses value at stored address</td>
+          <td><code>int y = *p;</code></td>
+        </tr>
+      </table>
+
+      <div class="example">
+        <div class="example-title">
+          <i class="fas fa-code"></i>
+          <h4>Basic Pointer Example</h4>
+        </div>
+        <pre data-title="basic_pointer.c"><code class="language-c">#include &lt;stdio.h&gt;
+
+int main() {
+    int num = 42;        // Integer variable
+    int *ptr = &amp;num;     // Pointer holding address of num
+
+    printf("Value of num: %d\n", num);
+    printf("Address of num: %p\n", (void*)&amp;num);
+    printf("Value of ptr: %p\n", (void*)ptr);
+    printf("Value pointed by ptr: %d\n", *ptr);
+
+    // Modify through pointer
+    *ptr = 100;
+    printf("New value of num: %d\n", num);
+
+    return 0;
+}</code></pre>
+
+        <div class="explanation">
+          <p><strong>Explanation:</strong></p>
+          <ol>
+            <li><code>int num = 42;</code> creates an integer variable with value 42</li>
+            <li><code>int *ptr = &amp;num;</code> creates a pointer and assigns it the address of num</li>
+            <li>The <code>%p</code> format specifier prints pointer values (cast to void* for portability)</li>
+            <li><code>*ptr = 100;</code> modifies the value at the address stored in ptr</li>
+          </ol>
+          <p><strong>Output:</strong></p>
+          <pre>Value of num: 42
+Address of num: 0x7ffd42
+Value of ptr: 0x7ffd42
+Value pointed by ptr: 42
+New value of num: 100</pre>
+        </div>
+      </div>
+
+      <div class="example">
+        <div class="example-title">
+          <i class="fas fa-code"></i>
+          <h4>Pointer Types and Void Pointers</h4>
+        </div>
+        <pre data-title="void_pointer.c"><code class="language-c">#include &lt;stdio.h&gt;
+
+int main() {
+    int int_val = 65;
+    float float_val = 3.14;
+    char char_val = 'A';
+
+    void *generic_ptr;
+
+    generic_ptr = &amp;int_val;
+    printf("Integer value: %d\n", *(int*)generic_ptr);
+
+    generic_ptr = &amp;float_val;
+    printf("Float value: %.2f\n", *(float*)generic_ptr);
+
+    generic_ptr = &amp;char_val;
+    printf("Char value: %c\n", *(char*)generic_ptr);
+
+    return 0;
+}</code></pre>
+
+        <div class="explanation">
+          <p><strong>Explanation:</strong></p>
+          <ul>
+            <li>Void pointers (<code>void*</code>) can point to any data type</li>
+            <li>Must be explicitly cast before dereferencing</li>
+            <li>Commonly used in generic functions like <code>qsort</code> and <code>memcpy</code></li>
+          </ul>
+          <p><strong>Output:</strong></p>
+          <pre>Integer value: 65
+Float value: 3.14
+Char value: A</pre>
+        </div>
+      </div>
+    </section>
+
+
+    <section id="arithmetic">
+      <h2>2. Pointer Arithmetic Deep Dive</h2>
+
+      <div class="info-box">
+        <div class="box-title">
+          <i class="fas fa-calculator"></i> Core Principle
+        </div>
+        <p>Pointer arithmetic enables navigation through memory by adjusting addresses based on the size of the pointed-to type. Unlike regular arithmetic, operations are scaled by sizeof(type), allowing efficient traversal of data structures.</p>
+      </div>
+
+      <h3>Fundamental Operations</h3>
+      <p>Pointer arithmetic supports four basic operations with special behaviors:</p>
+
+      <table>
+        <tr>
+          <th>Operation</th>
+          <th>Effect</th>
+          <th>Memory Impact</th>
+        </tr>
+        <tr>
+          <td>Addition (+)</td>
+          <td>Moves forward in memory</td>
+          <td>ptr + n → n × sizeof(type)</td>
+        </tr>
+        <tr>
+          <td>Subtraction (-)</td>
+          <td>Moves backward in memory</td>
+          <td>ptr - n → -n × sizeof(type)</td>
+        </tr>
+        <tr>
+          <td>Increment (++)</td>
+          <td>Next element</td>
+          <td>ptr += sizeof(type)</td>
+        </tr>
+        <tr>
+          <td>Decrement (--)</td>
+          <td>Previous element</td>
+          <td>ptr -= sizeof(type)</td>
+        </tr>
+      </table>
+
+      <div class="example">
+        <div class="example-title">
+          <i class="fas fa-code"></i>
+          <h4>Array Traversal with Pointers</h4>
+        </div>
+        <pre data-title="array_traversal.c"><code class="language-c">#include &lt;stdio.h&gt;
+
+int main() {
+    double values[] = {1.1, 2.2, 3.3, 4.4, 5.5};
+    double *ptr = values;
+    double *end = ptr + 5;  // Points one past last element
+
+    while (ptr < end) {
+        printf("%.1f ", *ptr);
+        ptr++;  // Moves by sizeof(double) bytes
+    }
+
+    return 0;
+}</code></pre>
+
+        <div class="explanation">
+          <p><strong>Explanation:</strong></p>
+          <ul>
+            <li><code>double *ptr = values</code> points to first array element</li>
+            <li><code>end</code> calculated using pointer arithmetic</li>
+            <li>Each <code>ptr++</code> moves pointer by 8 bytes (typical double size)</li>
+            <li>Pointer comparison (<code>ptr < end</code>) validates bounds</li>
+          </ul>
+          <p><strong>Output:</strong></p>
+          <pre>1.1 2.2 3.3 4.4 5.5</pre>
+        </div>
+      </div>
+
+      <h3>Pointer Difference and Relational Operations</h3>
+      <p>Subtracting pointers yields the number of elements between them, while comparisons reveal memory ordering:</p>
+
+      <div class="example">
+        <div class="example-title">
+          <i class="fas fa-code"></i>
+          <h4>Pointer Difference Example</h4>
+        </div>
+        <pre data-title="pointer_diff.c"><code class="language-c">#include &lt;stdio.h&gt;
+
+int main() {
+    int arr[10] = {0};
+    int *p1 = &arr[2];
+    int *p2 = &arr[8];
+
+    printf("Elements between: %td\n", p2 - p1);
+    printf("Bytes between: %td\n", (char*)p2 - (char*)p1);
+
+    if (p1 < p2) {
+        printf("p1 comes before p2 in memory\n");
+    }
+
+    return 0;
+}</code></pre>
+
+        <div class="explanation">
+          <p><strong>Explanation:</strong></p>
+          <ul>
+            <li><code>p2 - p1</code> gives element count (6)</li>
+            <li>Casting to <code>char*</code> shows actual byte difference (24 bytes for 6 ints)</li>
+            <li>Relational operators compare memory addresses</li>
+          </ul>
+          <p><strong>Output:</strong></p>
+          <pre>Elements between: 6
+Bytes between: 24
+p1 comes before p2 in memory</pre>
+        </div>
+      </div>
+    </section>
+      <section id="arrays">
+  <h2>3. Pointers and Arrays</h2>
+
+  <div class="info-box">
+    <div class="box-title">
+      <i class="fas fa-info-circle"></i> Core Concept
+    </div>
+    <p>Arrays and pointers are intimately related in C. An array name acts like a constant pointer to the first element, and pointer arithmetic provides efficient array access. Understanding this relationship is crucial for effective C programming.</p>
+  </div>
+
+  <h3>The Array-Pointer Relationship</h3>
+  <p>Key aspects of the array-pointer relationship:</p>
+  <ul>
+    <li>Array name decays to pointer to first element in most expressions</li>
+    <li>Pointer arithmetic allows array-like access to any memory block</li>
+    <li>Array subscript notation (arr[i]) is syntactic sugar for pointer arithmetic (*(arr+i))</li>
+    <li>sizeof() behaves differently for arrays vs pointers</li>
+  </ul>
+
+  <div class="example">
+    <div class="example-title">
+      <i class="fas fa-code"></i>
+      <h4>Array Access via Pointers</h4>
+    </div>
+    <pre data-title="array_pointer.c"><code class="language-c">#include &lt;stdio.h&gt;
+
+int main() {
+    int arr[5] = {10, 20, 30, 40, 50};
+    int *ptr = arr;  // Equivalent to &arr[0]
+
+    // Three equivalent ways to access array elements
+    printf("arr[2] = %d\n", arr[2]);
+    printf("*(arr + 2) = %d\n", *(arr + 2));
+    printf("ptr[2] = %d\n", ptr[2]);
+
+    // Pointer arithmetic traversal
+    for (int *p = arr; p < arr + 5; p++) {
+        printf("%d ", *p);
+    }
+
+    return 0;
+}</code></pre>
+    <div class="explanation">
+      <p><strong>Explanation:</strong></p>
+      <ul>
+        <li>Shows three equivalent ways to access array elements</li>
+        <li>Demonstrates pointer arithmetic for array traversal</li>
+        <li>The array name <code>arr</code> decays to a pointer in most contexts</li>
+      </ul>
+      <p><strong>Output:</strong></p>
+      <pre>arr[2] = 30
+*(arr + 2) = 30
+ptr[2] = 30
+10 20 30 40 50</pre>
+    </div>
+  </div>
+
+  <h3>Differences Between Arrays and Pointers</h3>
+  <table>
+    <tr>
+      <th>Feature</th>
+      <th>Array</th>
+      <th>Pointer</th>
+    </tr>
+    <tr>
+      <td>Memory Allocation</td>
+      <td>Static (compile-time)</td>
+      <td>Dynamic (runtime)</td>
+    </tr>
+    <tr>
+      <td>sizeof()</td>
+      <td>Total array size</td>
+      <td>Pointer size (typically 4/8 bytes)</td>
+    </tr>
+    <tr>
+      <td>Assignment</td>
+      <td>Cannot be reassigned</td>
+      <td>Can point elsewhere</td>
+    </tr>
+    <tr>
+      <td>& operator</td>
+      <td>Address of whole array</td>
+      <td>Address of pointer variable</td>
+    </tr>
+  </table>
+
+  <div class="warning-box">
+    <div class="box-title">
+      <i class="fas fa-exclamation-triangle"></i> Common Pitfalls
+    </div>
+    <ul>
+      <li>Assuming arrays and pointers are identical</li>
+      <li>Forgetting that array names are not modifiable lvalues</li>
+      <li>Using sizeof() incorrectly when passing arrays to functions</li>
+      <li>Confusing pointer-to-array with array-of-pointers</li>
+    </ul>
+  </div>
+
+  <h3>Passing Arrays to Functions</h3>
+  <p>Arrays are always passed by reference (as pointers) in C:</p>
+
+  <div class="example">
+    <div class="example-title">
+      <i class="fas fa-code"></i>
+      <h4>Array Function Parameters</h4>
+    </div>
+    <pre data-title="array_function.c"><code class="language-c">#include &lt;stdio.h&gt;
+
+// These three declarations are equivalent
+void print_array(int *arr, int size);
+void print_array(int arr[], int size);
+void print_array(int arr[5], int size);  // Size hint ignored
+
+void print_array(int *arr, int size) {
+    for (int i = 0; i < size; i++) {
+        printf("%d ", arr[i]);
+    }
+}
+
+int main() {
+    int nums[5] = {1, 2, 3, 4, 5};
+    print_array(nums, 5);  // nums decays to pointer
+    return 0;
+}</code></pre>
+    <div class="explanation">
+      <p><strong>Explanation:</strong></p>
+      <ul>
+        <li>Shows equivalent function parameter declarations</li>
+        <li>Demonstrates array decay to pointer when passed to function</li>
+        <li>The array size in the parameter (e.g., arr[5]) is just documentation</li>
+      </ul>
+      <p><strong>Output:</strong></p>
+      <pre>1 2 3 4 5</pre>
+    </div>
+  </div>
+
+  <h3>Pointer to Array vs Array of Pointers</h3>
+  <p>These distinct concepts are often confused:</p>
+
+  <div class="example">
+    <div class="example-title">
+      <i class="fas fa-code"></i>
+      <h4>Pointer to Array Example</h4>
+    </div>
+    <pre data-title="pointer_to_array.c"><code class="language-c">#include &lt;stdio.h&gt;
+
+int main() {
+    int arr[3][4] = {{1,2,3,4}, {5,6,7,8}, {9,10,11,12}};
+    int (*ptr)[4] = arr;  // Pointer to array of 4 ints
+
+    printf("%d\n", ptr[1][2]);  // Access like 2D array
+    printf("%d\n", (*(ptr + 1))[2]);  // Equivalent pointer arithmetic
+
+    return 0;
+}</code></pre>
+    <div class="explanation">
+      <p><strong>Explanation:</strong></p>
+      <ul>
+        <li><code>int (*ptr)[4]</code> declares a pointer to an array of 4 integers</li>
+        <li>Used for accessing multi-dimensional arrays</li>
+        <li>Pointer arithmetic moves by entire row size</li>
+      </ul>
+      <p><strong>Output:</strong></p>
+      <pre>7
+7</pre>
+    </div>
+  </div>
+</section>
+      <section id="functions">
+  <h2>4. Pointers and Functions</h2>
+
+  <div class="info-box">
+    <div class="box-title">
+      <i class="fas fa-info-circle"></i> Core Concept
+    </div>
+    <p>Pointers enable powerful function interactions in C, including pass-by-reference, function pointers for callbacks, and dynamic behavior. Mastering pointer-function interactions is essential for advanced C programming.</p>
+  </div>
+
+  <h3>Pass-by-Reference with Pointers</h3>
+  <p>C uses pass-by-value by default, but pointers enable pass-by-reference simulation:</p>
+
+  <div class="example">
+    <div class="example-title">
+      <i class="fas fa-code"></i>
+      <h4>Swapping Values Example</h4>
+    </div>
+    <pre data-title="swap.c"><code class="language-c">#include &lt;stdio.h&gt;
+
+void swap(int *a, int *b) {
+    int temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+int main() {
+    int x = 5, y = 10;
+    printf("Before: x=%d, y=%d\n", x, y);
+    swap(&x, &y);
+    printf("After: x=%d, y=%d\n", x, y);
+    return 0;
+}</code></pre>
+    <div class="explanation">
+      <p><strong>Explanation:</strong></p>
+      <ul>
+        <li>Pass addresses of variables using & operator</li>
+        <li>Function parameters are pointers to the original variables</li>
+        <li>Dereference pointers (*) to modify original values</li>
+        <li>This is how C implements pass-by-reference</li>
+      </ul>
+      <p><strong>Output:</strong></p>
+      <pre>Before: x=5, y=10
+After: x=10, y=5</pre>
+    </div>
+  </div>
+
+  <h3>Function Pointers</h3>
+  <p>Function pointers store addresses of functions for dynamic invocation:</p>
+
+  <table>
+    <tr>
+      <th>Declaration</th>
+      <th>Description</th>
+      <th>Example</th>
+    </tr>
+    <tr>
+      <td>return_type (*ptr)(params)</td>
+      <td>Basic function pointer</td>
+      <td><code>int (*func)(int, int)</code></td>
+    </tr>
+    <tr>
+      <td>typedef return_type (*Type)(params)</td>
+      <td>Function pointer type</td>
+      <td><code>typedef int (*Operation)(int, int)</code></td>
+    </tr>
+    <tr>
+      <td>ptr = &function_name</td>
+      <td>Assignment</td>
+      <td><code>func = &add</code></td>
+    </tr>
+    <tr>
+      <td>ptr(params) or (*ptr)(params)</td>
+      <td>Invocation</td>
+      <td><code>result = func(2, 3)</code></td>
+    </tr>
+  </table>
+
+  <div class="example">
+    <div class="example-title">
+      <i class="fas fa-code"></i>
+      <h4>Calculator Using Function Pointers</h4>
+    </div>
+    <pre data-title="calculator.c"><code class="language-c">#include &lt;stdio.h&gt;
+
+int add(int a, int b) { return a + b; }
+int subtract(int a, int b) { return a - b; }
+
+int main() {
+    int (*operation)(int, int);  // Function pointer
+
+    operation = &add;
+    printf("5 + 3 = %d\n", operation(5, 3));
+
+    operation = &subtract;
+    printf("5 - 3 = %d\n", operation(5, 3));
+
+    return 0;
+}</code></pre>
+    <div class="explanation">
+      <p><strong>Explanation:</strong></p>
+      <ul>
+        <li>Declare function pointer with matching signature</li>
+        <li>Assign address of functions using & operator</li>
+        <li>Call through function pointer like regular function</li>
+        <li>Enables runtime selection of behavior</li>
+      </ul>
+      <p><strong>Output:</strong></p>
+      <pre>5 + 3 = 8
+5 - 3 = 2</pre>
+    </div>
+  </div>
+
+  <h3>Pointers as Function Returns</h3>
+  <p>Functions can return pointers, but care must be taken with scope:</p>
+
+  <div class="warning-box">
+    <div class="box-title">
+      <i class="fas fa-exclamation-triangle"></i> Danger Zone
+    </div>
+    <p>Never return pointers to:</p>
+    <ul>
+      <li>Local variables (stack-allocated)</li>
+      <li>Function parameters</li>
+      <li>Temporary values</li>
+    </ul>
+    <p>Safe to return pointers to:</p>
+    <ul>
+      <li>Static variables</li>
+      <li>Dynamically allocated memory</li>
+      <li>Global variables</li>
+    </ul>
+  </div>
+
+  <div class="example">
+    <div class="example-title">
+      <i class="fas fa-code"></i>
+      <h4>Safe Pointer Return Example</h4>
+    </div>
+    <pre data-title="return_pointer.c"><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+
+// Safe: returns pointer to static memory
+char* getGreeting() {
+    static char greeting[] = "Hello, World!";
+    return greeting;
+}
+
+// Safe: returns dynamically allocated memory
+int* createArray(int size) {
+    int *arr = malloc(size * sizeof(int));
+    return arr;
+}
+
+int main() {
+    char *msg = getGreeting();
+    printf("%s\n", msg);
+
+    int *numbers = createArray(5);
+    free(numbers);  // Remember to free!
+
+    return 0;
+}</code></pre>
+    <div class="explanation">
+      <p><strong>Explanation:</strong></p>
+      <ul>
+        <li><code>getGreeting()</code> returns pointer to static memory</li>
+        <li><code>createArray()</code> returns dynamically allocated memory</li>
+        <li>Both are safe as memory persists after function returns</li>
+        <li>Remember to free malloc'd memory when done</li>
+      </ul>
+      <p><strong>Output:</strong></p>
+      <pre>Hello, World!</pre>
+    </div>
+  </div>
+
+  <h3>Callback Functions</h3>
+  <p>Function pointers enable callback patterns for flexible designs:</p>
+
+  <div class="example">
+    <div class="example-title">
+      <i class="fas fa-code"></i>
+      <h4>Callback Implementation</h4>
+    </div>
+    <pre data-title="callback.c"><code class="language-c">#include &lt;stdio.h&gt;
+
+typedef void (*Callback)(int);
+
+void processNumbers(int arr[], int size, Callback cb) {
+    for (int i = 0; i < size; i++) {
+        cb(arr[i]);
+    }
+}
+
+void printNumber(int num) {
+    printf("%d ", num);
+}
+
+void printSquare(int num) {
+    printf("%d ", num * num);
+}
+
+int main() {
+    int nums[] = {1, 2, 3, 4, 5};
+
+    processNumbers(nums, 5, &printNumber);
+    printf("\n");
+
+    processNumbers(nums, 5, &printSquare);
+
+    return 0;
+}</code></pre>
+    <div class="explanation">
+      <p><strong>Explanation:</strong></p>
+      <ul>
+        <li>Define callback type using typedef</li>
+        <li><code>processNumbers()</code> accepts any callback function</li>
+        <li>Different behaviors without modifying core logic</li>
+        <li>Common in event-driven and GUI programming</li>
+      </ul>
+      <p><strong>Output:</strong></p>
+      <pre>1 2 3 4 5
+1 4 9 16 25</pre>
+    </div>
+  </div>
+</section>
+
+<section id="strings">
+  <h2>5. Pointers and Strings</h2>
+
+  <div class="info-box">
+    <div class="box-title">
+      <i class="fas fa-info-circle"></i> Core Concept
+    </div>
+    <p>In C, strings are implemented as arrays of characters terminated by a null character ('\0'). Pointers provide efficient ways to manipulate strings, but require careful memory management to avoid common pitfalls.</p>
+  </div>
+
+  <h3>String Fundamentals</h3>
+  <p>C strings are null-terminated character arrays:</p>
+
+  <div class="example">
+    <div class="example-title">
+      <i class="fas fa-code"></i>
+      <h4>String Declaration Examples</h4>
+    </div>
+    <pre data-title="string_declaration.c"><code class="language-c">#include &lt;stdio.h&gt;
+
+int main() {
+    // Array-style initialization (stack allocated)
+    char str1[] = "Hello";
+
+    // Pointer to string literal (read-only memory)
+    char *str2 = "World";
+
+    // Manual initialization
+    char str3[6] = {'H', 'e', 'l', 'l', 'o', '\0'};
+
+    printf("%s %s %s\n", str1, str2, str3);
+    return 0;
+}</code></pre>
+    <div class="explanation">
+      <p><strong>Explanation:</strong></p>
+      <ul>
+        <li><code>str1</code>: Modifiable array with automatic null termination</li>
+        <li><code>str2</code>: Pointer to immutable string literal</li>
+        <li><code>str3</code>: Explicit null-terminated character array</li>
+      </ul>
+      <p><strong>Output:</strong></p>
+      <pre>Hello World Hello</pre>
+    </div>
+  </div>
+
+  <h3>Common String Functions</h3>
+  <p>Standard library provides essential string operations:</p>
+
+  <table>
+    <tr>
+      <th>Function</th>
+      <th>Purpose</th>
+      <th>Example</th>
+    </tr>
+    <tr>
+      <td>strlen()</td>
+      <td>Get string length</td>
+      <td><code>int len = strlen(str);</code></td>
+    </tr>
+    <tr>
+      <td>strcpy()</td>
+      <td>Copy string</td>
+      <td><code>strcpy(dest, src);</code></td>
+    </tr>
+    <tr>
+      <td>strcat()</td>
+      <td>Concatenate strings</td>
+      <td><code>strcat(str1, str2);</code></td>
+    </tr>
+    <tr>
+      <td>strcmp()</td>
+      <td>Compare strings</td>
+      <td><code>if (strcmp(s1, s2) == 0)</code></td>
+    </tr>
+  </table>
+
+  <div class="warning-box">
+    <div class="box-title">
+      <i class="fas fa-exclamation-triangle"></i> Common Pitfalls
+    </div>
+    <ul>
+      <li>Forgetting null termination</li>
+      <li>Buffer overflow vulnerabilities</li>
+      <li>Modifying string literals</li>
+      <li>Confusing character pointers with arrays</li>
+    </ul>
+  </div>
+
+  <h3>String Manipulation with Pointers</h3>
+  <p>Pointers enable efficient string processing:</p>
+
+  <div class="example">
+    <div class="example-title">
+      <i class="fas fa-code"></i>
+      <h4>Custom String Functions</h4>
+    </div>
+    <pre data-title="string_manipulation.c"><code class="language-c">#include &lt;stdio.h&gt;
+
+// Custom string length function
+int strLength(const char *str) {
+    const char *p = str;
+    while (*p) p++;
+    return p - str;
+}
+
+// Custom string copy (safe version)
+void strCopy(char *dest, const char *src, size_t size) {
+    while (--size && (*dest++ = *src++));
+    *dest = '\0';
+}
+
+int main() {
+    char s1[20] = "Hello";
+    char s2[20];
+
+    printf("Length: %d\n", strLength(s1));
+    strCopy(s2, s1, sizeof(s2));
+    printf("Copy: %s\n", s2);
+
+    return 0;
+}</code></pre>
+    <div class="explanation">
+      <p><strong>Explanation:</strong></p>
+      <ul>
+        <li>Pointer arithmetic for efficient traversal</li>
+        <li>const correctness for safety</li>
+        <li>Boundary checking in custom functions</li>
+        <li>Null termination handling</li>
+      </ul>
+      <p><strong>Output:</strong></p>
+      <pre>Length: 5
+Copy: Hello</pre>
+    </div>
+  </div>
+</section>
+<section id="dynamic">
+  <h2>6. Dynamic Memory Allocation</h2>
+
+  <div class="info-box">
+    <div class="box-title">
+      <i class="fas fa-info-circle"></i> Core Concept
+    </div>
+    <p>Dynamic memory allocation allows programs to request memory at runtime using malloc(), calloc(), and realloc(). Proper management of this memory is critical to avoid leaks and corruption.</p>
+  </div>
+
+  <h3>Allocation Functions</h3>
+  <p>C provides three primary memory allocation functions:</p>
+
+  <table>
+    <tr>
+      <th>Function</th>
+      <th>Purpose</th>
+      <th>Example</th>
+    </tr>
+    <tr>
+      <td>malloc()</td>
+      <td>Allocate raw memory</td>
+      <td><code>int *p = malloc(10 * sizeof(int));</code></td>
+    </tr>
+    <tr>
+      <td>calloc()</td>
+      <td>Allocate and zero memory</td>
+      <td><code>int *p = calloc(10, sizeof(int));</code></td>
+    </tr>
+    <tr>
+      <td>realloc()</td>
+      <td>Resize allocation</td>
+      <td><code>p = realloc(p, 20 * sizeof(int));</code></td>
+    </tr>
+  </table>
+
+  <div class="warning-box">
+    <div class="box-title">
+      <i class="fas fa-exclamation-triangle"></i> Critical Rules
+    </div>
+    <ul>
+      <li>Always check for NULL returns</li>
+      <li>Always free allocated memory</li>
+      <li>Don't access freed memory</li>
+      <li>Track allocation sizes</li>
+    </ul>
+  </div>
+
+  <h3>Memory Management Patterns</h3>
+
+  <div class="example">
+    <div class="example-title">
+      <i class="fas fa-code"></i>
+      <h4>Safe Allocation Example</h4>
+    </div>
+    <pre data-title="safe_allocation.c"><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+
+int* createIntArray(size_t size) {
+    int *arr = malloc(size * sizeof(int));
+    if (!arr) {
+        fprintf(stderr, "Memory allocation failed\n");
+        exit(EXIT_FAILURE);
+    }
+    return arr;
+}
+
+void destroyIntArray(int **arr) {
+    free(*arr);
+    *arr = NULL;  // Prevent dangling pointer
+}
+
+int main() {
+    int *numbers = createIntArray(10);
+
+    // Use the array...
+    for (int i = 0; i < 10; i++) {
+        numbers[i] = i * 2;
+    }
+
+    destroyIntArray(&numbers);
+    return 0;
+}</code></pre>
+    <div class="explanation">
+      <p><strong>Explanation:</strong></p>
+      <ul>
+        <li>Encapsulates allocation in create/destroy functions</li>
+        <li>Proper error checking</li>
+        <li>Nulling pointer after free</li>
+        <li>Type-safe size calculation</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>Common Dynamic Structures</h3>
+  <p>Dynamic memory enables flexible data structures:</p>
+
+  <div class="example">
+    <div class="example-title">
+      <i class="fas fa-code"></i>
+      <h4>Linked List Example</h4>
+    </div>
+    <pre data-title="linked_list.c"><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+
+typedef struct Node {
+    int data;
+    struct Node *next;
+} Node;
+
+Node* createNode(int value) {
+    Node *newNode = malloc(sizeof(Node));
+    if (!newNode) return NULL;
+    newNode->data = value;
+    newNode->next = NULL;
+    return newNode;
+}
+
+void freeList(Node **head) {
+    Node *current = *head;
+    while (current) {
+        Node *next = current->next;
+        free(current);
+        current = next;
+    }
+    *head = NULL;
+}
+
+int main() {
+    Node *head = createNode(1);
+    head->next = createNode(2);
+    head->next->next = createNode(3);
+
+    // Traverse list
+    for (Node *curr = head; curr; curr = curr->next) {
+        printf("%d ", curr->data);
+    }
+
+    freeList(&head);
+    return 0;
+}</code></pre>
+    <div class="explanation">
+      <p><strong>Explanation:</strong></p>
+      <ul>
+        <li>Node structure with dynamic allocation</li>
+        <li>Proper cleanup function</li>
+        <li>Pointer-based traversal</li>
+        <li>Memory safety practices</li>
+      </ul>
+      <p><strong>Output:</strong></p>
+      <pre>1 2 3</pre>
+    </div>
+  </div>
+</section>
+     <section id="structs">
+  <h2>7. Pointers to Structures</h2>
+
+  <div class="info-box">
+    <div class="box-title">
+      <i class="fas fa-info-circle"></i> Core Concept
+    </div>
+    <p>Pointers to structures enable efficient manipulation of complex data types, dynamic allocation of structures, and implementation of data structures like linked lists and trees. The arrow operator (->) provides convenient access to structure members through pointers.</p>
+  </div>
+
+  <h3>Basic Structure Pointer Usage</h3>
+
+  <div class="example">
+    <div class="example-title">
+      <i class="fas fa-code"></i>
+      <h4>Structure Pointer Example</h4>
+    </div>
+    <pre data-title="struct_pointer.c"><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+
+typedef struct {
+    int id;
+    char name[50];
+    float gpa;
+} Student;
+
+int main() {
+    // Stack-allocated structure
+    Student s1 = {101, "Alice", 3.8};
+
+    // Pointer to structure
+    Student *ptr = &s1;
+
+    // Access members
+    printf("ID: %d\n", ptr->id);
+    printf("Name: %s\n", ptr->name);
+    printf("GPA: %.2f\n", ptr->gpa);
+
+    // Dynamically allocated structure
+    Student *s2 = malloc(sizeof(Student));
+    s2->id = 102;
+    strcpy(s2->name, "Bob");
+    s2->gpa = 3.5;
+
+    free(s2);
+    return 0;
+}</code></pre>
+    <div class="explanation">
+      <p><strong>Explanation:</strong></p>
+      <ul>
+        <li>Shows stack and heap allocation of structures</li>
+        <li>Demonstrates arrow operator (->) for member access</li>
+        <li>Includes proper memory management</li>
+      </ul>
+      <p><strong>Output:</strong></p>
+      <pre>ID: 101
+Name: Alice
+GPA: 3.80</pre>
+    </div>
+  </div>
+
+  <h3>Structure Pointers in Data Structures</h3>
+
+  <div class="example">
+    <div class="example-title">
+      <i class="fas fa-code"></i>
+      <h4>Linked List Implementation</h4>
+    </div>
+    <pre data-title="linked_list.c"><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+
+typedef struct Node {
+    int data;
+    struct Node *next;
+} Node;
+
+void append(Node **head, int value) {
+    Node *newNode = malloc(sizeof(Node));
+    newNode->data = value;
+    newNode->next = NULL;
+
+    if (*head == NULL) {
+        *head = newNode;
+        return;
+    }
+
+    Node *current = *head;
+    while (current->next != NULL) {
+        current = current->next;
+    }
+    current->next = newNode;
+}
+
+void printList(Node *head) {
+    Node *current = head;
+    while (current != NULL) {
+        printf("%d -> ", current->data);
+        current = current->next;
+    }
+    printf("NULL\n");
+}
+
+int main() {
+    Node *head = NULL;
+    append(&head, 10);
+    append(&head, 20);
+    append(&head, 30);
+    printList(head);
+
+    // Cleanup omitted for brevity
+    return 0;
+}</code></pre>
+    <div class="explanation">
+      <p><strong>Explanation:</strong></p>
+      <ul>
+        <li>Shows pointer-to-pointer usage for head modification</li>
+        <li>Demonstrates dynamic structure allocation</li>
+        <li>Illustrates linked list traversal</li>
+      </ul>
+      <p><strong>Output:</strong></p>
+      <pre>10 -> 20 -> 30 -> NULL</pre>
+    </div>
+  </div>
+
+  <h3>Structure Pointer Pitfalls</h3>
+  <div class="warning-box">
+    <div class="box-title">
+      <i class="fas fa-exclamation-triangle"></i> Common Mistakes
+    </div>
+    <ul>
+      <li>Forgetting to allocate memory before access</li>
+      <li>Accessing freed memory</li>
+      <li>Pointer arithmetic misalignment</li>
+      <li>Shallow vs deep copy confusion</li>
+    </ul>
+  </div>
+</section>
+      <section id="typecast">
+  <h2>8. Pointer Typecasting</h2>
+
+  <div class="info-box">
+    <div class="box-title">
+      <i class="fas fa-info-circle"></i> Core Concept
+    </div>
+    <p>Pointer typecasting allows treating a pointer of one type as another type. This is powerful but dangerous - proper alignment and type compatibility must be maintained to avoid undefined behavior.</p>
+  </div>
+
+  <h3>Basic Typecasting</h3>
+
+  <div class="example">
+    <div class="example-title">
+      <i class="fas fa-code"></i>
+      <h4>Simple Typecasting Example</h4>
+    </div>
+    <pre data-title="basic_cast.c"><code class="language-c">#include &lt;stdio.h&gt;
+
+int main() {
+    int x = 0x41424344;  // 'ABCD' in ASCII
+
+    // Cast int pointer to char pointer
+    char *cptr = (char*)&x;
+
+    // Access individual bytes
+    printf("%c %c %c %c\n", cptr[0], cptr[1], cptr[2], cptr[3]);
+
+    // Cast back to original type
+    int *iptr = (int*)cptr;
+    printf("%x\n", *iptr);
+
+    return 0;
+}</code></pre>
+    <div class="explanation">
+      <p><strong>Explanation:</strong></p>
+      <ul>
+        <li>Demonstrates type punning between int and char</li>
+        <li>Shows byte-level access via char pointer</li>
+        <li>Illustrates round-trip casting</li>
+        <li>Output depends on endianness</li>
+      </ul>
+      <p><strong>Output (Little-endian):</strong></p>
+      <pre>D C B A
+41424344</pre>
+    </div>
+  </div>
+
+  <h3>Alignment Considerations</h3>
+  <div class="warning-box">
+    <div class="box-title">
+      <i class="fas fa-exclamation-triangle"></i> Alignment Warnings
+    </div>
+    <ul>
+      <li>Accessing misaligned pointers causes crashes on some architectures</li>
+      <li>Always ensure proper alignment when casting</li>
+      <li>Use memcpy() for safe type punning</li>
+    </ul>
+  </div>
+
+  <h3>Advanced Typecasting</h3>
+
+  <div class="example">
+    <div class="example-title">
+      <i class="fas fa-code"></i>
+      <h4>Structure Pointer Casting</h4>
+    </div>
+    <pre data-title="struct_cast.c"><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+
+typedef struct {
+    char name[20];
+    int age;
+} Person;
+
+typedef struct {
+    char id[10];
+    int score;
+} Student;
+
+int main() {
+    Person p = {"Alice", 20};
+
+    // Cast Person pointer to Student pointer
+    Student *s = (Student*)&p;
+
+    // Access through cast pointer
+    strcpy(s->id, "S12345");
+    s->score = 95;
+
+    // Original structure is modified
+    printf("Name: %s, Age: %d\n", p.name, p.age);
+    printf("ID: %s, Score: %d\n", s->id, s->score);
+
+    return 0;
+}</code></pre>
+    <div class="explanation">
+      <p><strong>Explanation:</strong></p>
+      <ul>
+        <li>Shows structure pointer casting</li>
+        <li>Demonstrates overlapping memory access</li>
+        <li>Highlights potential dangers</li>
+      </ul>
+      <p><strong>Output:</strong></p>
+      <pre>Name: S12345, Age: 95
+ID: S12345, Score: 95</pre>
+    </div>
+  </div>
+
+  <h3>Type Punning Techniques</h3>
+  <div class="tip-box">
+    <div class="box-title">
+      <i class="fas fa-lightbulb"></i> Safe Alternatives
+    </div>
+    <p>For safe type punning:</p>
+    <ul>
+      <li>Use unions (C99)</li>
+      <li>Use memcpy()</li>
+      <li>Consider compiler-specific attributes</li>
+    </ul>
+  </div>
+</section>
+      <section id="null">
+  <h2>9. Null Pointers</h2>
+
+  <div class="info-box">
+    <div class="box-title">
+      <i class="fas fa-info-circle"></i> Core Concept
+    </div>
+    <p>Null pointers are pointers set to <code>NULL</code>, indicating they do not point to any valid memory location. They are used to initialize pointers safely, mark the end of data structures, or indicate unallocated resources, preventing accidental dereferencing of invalid memory.</p>
+  </div>
+
+  <h3>Basic Null Pointer Usage</h3>
+
+  <div class="example">
+    <div class="example-title">
+      <i class="fas fa-code"></i>
+      <h4>Simple Null Pointer Example</h4>
+    </div>
+    <pre data-title="null_pointer.c"><code class="language-c">#include <stdio.h>
+
+int main() {
+    int *ptr = NULL;  // Initialize to NULL
+
+    // Check for null before dereferencing
+    if (ptr == NULL) {
+        printf("Pointer is null, cannot dereference\n");
+    }
+
+    int x = 100;
+    ptr = &x;  // Assign valid address
+
+    printf("Value at ptr: %d\n", *ptr);
+    return 0;
+}</code></pre>
+    <div class="explanation">
+      <p><strong>Explanation:</strong></p>
+      <ul>
+        <li><code>NULL</code> is typically defined as <code>(void*)0</code></li>
+        <li>Initializes pointer to avoid undefined behavior</li>
+        <li>Null check prevents invalid memory access</li>
+        <li>Reassigning pointer to valid address enables safe dereferencing</li>
+      </ul>
+      <p><strong>Output:</strong></p>
+      <pre>Pointer is null, cannot dereference
+Value at ptr: 100</pre>
+    </div>
+  </div>
+
+  <h3>Null Pointers in Data Structures</h3>
+
+  <div class="example">
+    <div class="example-title">
+      <i class="fas fa-code"></i>
+      <h4>Null Pointer in Linked List</h4>
+    </div>
+    <pre data-title="linked_list_null.c"><code class="language-c">#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct Node {
+    int data;
+    struct Node *next;
+} Node;
+
+void append(Node **head, int value) {
+    Node *newNode = malloc(sizeof(Node));
+    if (!newNode) {
+        printf("Memory allocation failed\n");
+        exit(1);
+    }
+    newNode->data = value;
+    newNode->next = NULL;
+
+    if (*head == NULL) {
+        *head = newNode;
+        return;
+    }
+
+    Node *current = *head;
+    while (current->next != NULL) {
+        current = current->next;
+    }
+    current->next = newNode;
+}
+
+void printList(Node *head) {
+    Node *current = head;
+    while (current != NULL) {
+        printf("%d -> ", current->data);
+        current = current->next;
+    }
+    printf("NULL\n");
+}
+
+int main() {
+    Node *head = NULL;  // Initialize empty list
+    append(&head, 5);
+    append(&head, 10);
+    printList(head);
+
+    // Cleanup omitted for brevity
+    return 0;
+}</code></pre>
+    <div class="explanation">
+      <p><strong>Explanation:</strong></p>
+      <ul>
+        <li>Uses <code>NULL</code> to mark end of linked list</li>
+        <li>Pointer-to-pointer allows modifying head pointer</li>
+        <li>Null checks ensure safe memory allocation</li>
+        <li>Traversal stops at <code>NULL</code></li>
+      </ul>
+      <p><strong>Output:</strong></p>
+      <pre>5 -> 10 -> NULL</pre>
+    </div>
+  </div>
+
+  <h3>Null Pointer Pitfalls</h3>
+  <div class="warning-box">
+    <div class="box-title">
+      <i class="fas fa-exclamation-triangle"></i> Common Mistakes
+    </div>
+    <ul>
+      <li>Dereferencing a null pointer causes undefined behavior</li>
+      <li>Failing to initialize pointers to <code>NULL</code></li>
+      <li>Not checking for <code>NULL</code> after allocation</li>
+      <li>Using null pointers after reassignment without validation</li>
+    </ul>
+  </div>
+</section>
+      <section id="dangling">
+  <h2>10. Dangling Pointers</h2>
+
+  <div class="info-box">
+    <div class="box-title">
+      <i class="fas fa-info-circle"></i> Core Concept
+    </div>
+    <p>Dangling pointers point to memory that has been freed or gone out of scope, such as local variables or deallocated dynamic memory. Dereferencing them leads to undefined behavior, making them a common source of bugs.</p>
+  </div>
+
+  <h3>Basic Dangling Pointer Issue</h3>
+
+  <div class="example">
+    <div class="example-title">
+      <i class="fas fa-code"></i>
+      <h4>Dangling Pointer from Local Scope</h4>
+    </div>
+    <pre data-title="dangling_local.c"><code class="language-c">#include <stdio.h>
+
+int* getLocalAddress() {
+    int x = 50;  // Local variable
+    return &x;   // Returns address of local variable
+}
+
+int main() {
+    int *ptr = getLocalAddress();  // ptr is dangling
+    printf("Value: %d\n", *ptr);   // Undefined behavior
+    return 0;
+}</code></pre>
+    <div class="explanation">
+      <p><strong>Explanation:</strong></p>
+      <ul>
+        <li>Local variable <code>x</code> goes out of scope when function returns</li>
+        <li>Returning its address creates a dangling pointer</li>
+        <li>Dereferencing <code>ptr</code> causes undefined behavior</li>
+      </ul>
+      <p><strong>Output:</strong></p>
+      <pre>Undefined behavior (likely garbage or crash)</pre>
+    </div>
+  </div>
+
+  <h3>Dangling Pointers in Dynamic Memory</h3>
+
+  <div class="example">
+    <div class="example-title">
+      <i class="fas fa-code"></i>
+      <h4>Dangling Pointer after Free</h4>
+    </div>
+    <pre data-title="dangling_free.c"><code class="language-c">#include <stdio.h>
+#include <stdlib.h>
+
+int main() {
+    int *ptr = malloc(sizeof(int));
+    if (!ptr) {
+        printf("Memory allocation failed\n");
+        return 1;
+    }
+    *ptr = 75;
+
+    printf("Before free: %d\n", *ptr);
+    free(ptr);  // Memory is freed
+    printf("After free: %d\n", *ptr);  // Undefined behavior
+    return 0;
+}</code></pre>
+    <div class="explanation">
+      <p><strong>Explanation:</strong></p>
+      <ul>
+        <li>Shows dangling pointer after freeing memory</li>
+        <li>Dereferencing after <code>free</code> is undefined</li>
+        <li>Setting <code>ptr = NULL</code> after free prevents accidental use</li>
+      </ul>
+      <p><strong>Output:</strong></p>
+      <pre>Before free: 75
+After free: Undefined behavior</pre>
+    </div>
+  </div>
+
+  <h3>Dangling Pointer Pitfalls</h3>
+  <div class="warning-box">
+    <div class="box-title">
+      <i class="fas fa-exclamation-triangle"></i> Common Mistakes
+    </div>
+    <ul>
+      <li>Not setting pointers to <code>NULL</code> after free</li>
+      <li>Returning pointers to local variables</li>
+      <li>Using pointers after <code>realloc</code> without checking</li>
+      <li>Ignoring scope rules for variables</li>
+    </ul>
+  </div>
+</section>
+      <section id="const">
+  <h2>11. Const Qualifier</h2>
+
+  <div class="info-box">
+    <div class="box-title">
+      <i class="fas fa-info-circle"></i> Core Concept
+    </div>
+    <p>The <code>const</code> qualifier ensures a variable or the data it points to cannot be modified, enhancing code safety and clarity. With pointers, <code>const</code> can apply to the pointer, the data, or both, controlling mutability.</p>
+  </div>
+
+  <h3>Basic Const Pointer Usage</h3>
+
+  <div class="example">
+    <div class="example-title">
+      <i class="fas fa-code"></i>
+      <h4>Const Data Pointer Example</h4>
+    </div>
+    <pre data-title="const_pointer.c"><code class="language-c">#include <stdio.h>
+
+int main() {
+    int x = 25;
+    const int *ptr = &x;  // Pointer to const int
+
+    // *ptr = 30;  // Error: cannot modify const data
+    x = 30;        // OK: x is not const
+    ptr = NULL;    // OK: pointer is not const
+
+    printf("Value: %d\n", x);
+    return 0;
+}</code></pre>
+    <div class="explanation">
+      <p><strong>Explanation:</strong></p>
+      <ul>
+        <li><code>const int *ptr</code>: Data is immutable through <code>ptr</code></li>
+        <li>Direct modification of <code>x</code> is allowed</li>
+        <li>Pointer can be reassigned to a different address</li>
+      </ul>
+      <p><strong>Output:</strong></p>
+      <pre>Value: 30</pre>
+    </div>
+  </div>
+
+  <h3>Const Pointers in Functions</h3>
+
+  <div class="example">
+    <div class="example-title">
+      <i class="fas fa-code"></i>
+      <h4>Const in Function Parameters</h4>
+    </div>
+    <pre data-title="const_function.c"><code class="language-c">#include <stdio.h>
+
+void printString(const char *str) {
+    // str[0] = 'X';  // Error: cannot modify const data
+    printf("String: %s\n", str);
+}
+
+int main() {
+    char str[] = "Hello";
+    printString(str);
+    return 0;
+}</code></pre>
+    <div class="explanation">
+      <p><strong>Explanation:</strong></p>
+      <ul>
+        <li><code>const char *str</code> prevents modifying string content</li>
+        <li>Enhances function safety and clarity</li>
+        <li>Common in string and array processing</li>
+      </ul>
+      <p><strong>Output:</strong></p>
+      <pre>String: Hello</pre>
+    </div>
+  </div>
+
+  <h3>Const Pointer Pitfalls</h3>
+  <div class="warning-box">
+    <div class="box-title">
+      <i class="fas fa-exclamation-triangle"></i> Common Mistakes
+    </div>
+    <ul>
+      <li>Casting away <code>const</code> can lead to undefined behavior</li>
+      <li>Misplacing <code>const</code> in pointer declarations</li>
+      <li>Assuming <code>const</code> protects the underlying data</li>
+      <li>Ignoring const-correctness in APIs</li>
+    </ul>
+  </div>
+</section>
+      <section id="volatile">
+  <h2>12. Volatile Qualifier</h2>
+
+  <div class="info-box">
+    <div class="box-title">
+      <i class="fas fa-info-circle"></i> Core Concept
+    </div>
+    <p>The <code>volatile</code> qualifier informs the compiler that a variable's value may change unexpectedly (e.g., by hardware or another thread), preventing optimizations that assume the value is stable.</p>
+  </div>
+
+  <h3>Basic Volatile Usage</h3>
+
+  <div class="example">
+    <div class="example-title">
+      <i class="fas fa-code"></i>
+      <h4>Volatile Variable Example</h4>
+    </div>
+    <pre data-title="volatile_basic.c"><code class="language-c">#include <stdio.h>
+
+volatile int status = 0;
+
+void waitForStatus() {
+    while (!status) {
+        // Busy wait
+    }
+    printf("Status changed to: %d\n", status);
+}
+
+int main() {
+    status = 1;  // Simulate external change
+    waitForStatus();
+    return 0;
+}</code></pre>
+    <div class="explanation">
+      <p><strong>Explanation:</strong></p>
+      <ul>
+        <li><code>volatile</code> ensures <code>status</code> is checked each iteration</li>
+        <li>Prevents compiler from optimizing away the loop</li>
+        <li>Useful for hardware or interrupt-driven code</li>
+      </ul>
+      <p><strong>Output:</strong></p>
+      <pre>Status changed to: 1</pre>
+    </div>
+  </div>
+
+  <h3>Volatile in Hardware Access</h3>
+
+  <div class="example">
+    <div class="example-title">
+      <i class="fas fa-code"></i>
+      <h4>Volatile in Memory-Mapped I/O</h4>
+    </div>
+    <pre data-title="volatile_hardware.c"><code class="language-c">#include <stdio.h>
+#include <stdint.h>
+
+#define STATUS_REG (*(volatile uint32_t*)0x4000)
+
+int main() {
+    // Read hardware register
+    uint32_t value = STATUS_REG;
+    printf("Register value: %u\n", value);
+
+    // Write to register
+    STATUS_REG = 0x1;
+
+    return 0;
+}</code></pre>
+    <div class="explanation">
+      <p><strong>Explanation:</strong></p>
+      <ul>
+        <li><code>volatile</code> ensures actual hardware access</li>
+        <li>Prevents compiler from caching register values</li>
+        <li>Critical for memory-mapped I/O</li>
+      </ul>
+      <p><strong>Output:</strong></p>
+      <pre>Register value: [Hardware-dependent]</pre>
+    </div>
+  </div>
+
+  <h3>Volatile Qualifier Pitfalls</h3>
+  <div class="warning-box">
+    <div class="box-title">
+      <i class="fas fa-exclamation-triangle"></i> Common Mistakes
+    </div>
+    <ul>
+      <li>Using <code>volatile</code> for thread safety (it’s insufficient)</li>
+      <li>Overusing <code>volatile</code>, reducing optimizations</li>
+      <li>Not combining with <code>const</code> when needed</li>
+      <li>Ignoring hardware-specific alignment requirements</li>
+    </ul>
+  </div>
+</section>
+
+
+<section id="bitwise">
+  <h2>13. Bitwise Operations</h2>
+
+  <div class="info-box">
+    <div class="box-title">
+      <i class="fas fa-info-circle"></i> Core Concept
+    </div>
+    <p>Bitwise operations manipulate individual bits in integer types. They are used for low-level programming, optimization, and flag management.</p>
+  </div>
+
+  <h3>Basic Bitwise Operations</h3>
+
+  <div class="example">
+    <div class="example-title">
+      <i class="fas fa-code"></i>
+      <h4>Bitwise Operators Example</h4>
+    </div>
+    <pre data-title="bitwise_ops.c"><code class="language-c">#include <stdio.h>
+
+int main() {
+    unsigned int a = 0x0F; // 00001111
+    unsigned int b = 0xF0; // 11110000
+
+    // Bitwise AND, OR, XOR, NOT
+    printf("AND: 0x%x\n", a & b);
+    printf("OR: 0x%x\n", a | b);
+    printf("XOR: 0x%x\n", a ^ b);
+    printf("NOT a: 0x%x\n", ~a);
+
+    // Left and right shift
+    printf("Left shift: 0x%x\n", a << 2);
+    printf("Right shift: 0x%x\n", b >> 2);
+
+    return 0;
+}</code></pre>
+    <div class="explanation">
+      <p><strong>Explanation:</strong></p>
+      <ul>
+        <li>Demonstrates AND (&), OR (|), XOR (^), and NOT (~)</li>
+        <li>Shows left (<<) and right (>>) shift operations</li>
+        <li>Shifts multiply/divide by powers of 2</li>
+      </ul>
+      <p><strong>Output:</strong></p>
+      <pre>AND: 0x0
+OR: 0xff
+XOR: 0xff
+NOT a: 0xfffffff0
+Left shift: 0x3c
+Right shift: 0x3c</pre>
+    </div>
+  </div>
+
+  <h3>Bitwise Flag Manipulation</h3>
+  <div class="tip-box">
+    <div class="box-title">
+      <i class="fas fa-lightbulb"></i> Practical Usage
+    </div>
+    <p>Bitwise operations are commonly used for:</p>
+    <ul>
+      <li>Setting/clearing flags</li>
+      <li>Masking specific bits</li>
+      <li>Checking bit states</li>
+    </ul>
+  </div>
+</section>
+
+<section id="debug">
+  <h2>14. Debugging</h2>
+
+  <div class="info-box">
+    <div class="box-title">
+      <i class="fas fa-info-circle"></i> Core Concept
+    </div>
+    <p>Debugging involves identifying and fixing errors in code using tools like printf(), debuggers (gdb), and assertions to trace program behavior.</p>
+  </div>
+
+  <h3>Using Printf Debugging</h3>
+
+  <div class="example">
+    <div class="example-title">
+      <i class="fas fa-code"></i>
+      <h4>Printf Debugging Example</h4>
+    </div>
+    <pre data-title="printf_debug.c"><code class="language-c">#include <stdio.h>
+
+int divide(int a, int b) {
+    printf("DEBUG: a=%d, b=%d\n", a, b);
+    if (b == 0) {
+        printf("ERROR: Division by zero\n");
+        return 0;
+    }
+    return a / b;
+}
+
+int main() {
+    int x = 10, y = 0;
+    printf("DEBUG: Calling divide(%d, %d)\n", x, y);
+    int result = divide(x, y);
+    printf("DEBUG: Result = %d\n", result);
+    return 0;
+}</code></pre>
+    <div class="explanation">
+      <p><strong>Explanation:</strong></p>
+      <ul>
+        <li>Uses printf() to trace variable values</li>
+        <li>Helps identify error conditions</li>
+        <li>Simple but effective for small programs</li>
+      </ul>
+      <p><strong>Output:</strong></p>
+      <pre>DEBUG: Calling divide(10, 0)
+DEBUG: a=10, b=0
+ERROR: Division by zero
+DEBUG: Result = 0</pre>
+    </div>
+  </div>
+
+  <h3>Using Assertions</h3>
+  <div class="warning-box">
+    <div class="box-title">
+      <i class="fas fa-exclamation-triangle"></i> Debugging Tips
+    </div>
+    <ul>
+      <li>Use assert() for invariant checking</li>
+      <li>Enable debugging symbols (-g) when compiling</li>
+      <li>Use gdb for interactive debugging</li>
+    </ul>
+  </div>
+</section>
+
+<section id="multiarrays">
+  <h2>15. Multi-dimensional Arrays</h2>
+
+  <div class="info-box">
+    <div class="box-title">
+      <i class="fas fa-info-circle"></i> Core Concept
+    </div>
+    <p>Multi-dimensional arrays store data in a grid-like structure, commonly used for matrices or tables. In C, they are implemented as arrays of arrays.</p>
+  </div>
+
+  <h3>2D Array Operations</h3>
+
+  <div class="example">
+    <div class="example-title">
+      <i class="fas fa-code"></i>
+      <h4>Matrix Initialization and Access</h4>
+    </div>
+    <pre data-title="matrix.c"><code class="language-c">#include <stdio.h>
+
+#define ROWS 3
+#define COLS 3
+
+int main() {
+    // Initialize 2D array
+    int matrix[ROWS][COLS] = {
+        {1, 2, 3},
+        {4, 5, 6},
+        {7, 8, 9}
+    };
+
+    // Print matrix
+    for (int i = 0; i < ROWS; i++) {
+        for (int j = 0; j < COLS; j++) {
+            printf("%d ", matrix[i][j]);
+        }
+        printf("\n");
+    }
+
+    return 0;
+}</code></pre>
+    <div class="explanation">
+      <p><strong>Explanation:</strong></p>
+      <ul>
+        <li>Declares and initializes a 2D array</li>
+        <li>Uses nested loops for access</li>
+        <li>Row-major storage in memory</li>
+      </ul>
+      <p><strong>Output:</strong></p>
+      <pre>1 2 3
+4 5 6
+7 8 9</pre>
+    </div>
+  </div>
+
+  <h3>Dynamic 2D Arrays</h3>
+  <div class="tip-box">
+    <div class="box-title">
+      <i class="fas fa-lightbulb"></i> Memory Management
+    </div>
+    <p>For dynamic multi-dimensional arrays:</p>
+    <ul>
+      <li>Use malloc() for allocation</li>
+      <li>Free memory properly to avoid leaks</li>
+      <li>Consider pointer-to-pointer approach</li>
+    </ul>
+  </div>
+</section>
+
+      <section id="pointer-animation" class="page container mx-auto px-4 py-8" style="display: none;">
+  <h2 class="text-3xl font-bold text-cyan-400 mb-6 flex items-center">
+    <i class="fas fa-play-circle mr-3"></i> 16. Pointer Animations
+  </h2>
+
+  <!-- Info Box -->
+  <div class="bg-gray-800 border-l-4 border-cyan-400 p-4 rounded-lg shadow-md mb-6">
+    <h3 class="text-lg font-semibold text-cyan-300 flex items-center mb-2">
+      <i class="fas fa-magic mr-2"></i> Interactive Visualizations
+    </h3>
+    <p class="text-gray-300">
+      These animations demonstrate key pointer concepts in C including pointer-to-pointer, array traversal,
+      function calls, linked list operations, and heap memory visualization. Click buttons to see real-time memory interaction.
+    </p>
+  </div>
+
+  <!-- Pointer-to-Pointer Animation -->
+  <div class="mb-10">
+    <h3 class="text-xl font-semibold text-teal-300 mb-3 flex items-center">
+      <i class="fas fa-random mr-2"></i> Pointer-to-Pointer
+    </h3>
+    <button onclick="startPointerToPointer()" class="bg-teal-600 text-white px-4 py-2 rounded-lg hover:bg-teal-700 mb-3">
+      ▶ Start Pointer-to-Pointer
+    </button>
+    <canvas id="pointerToPointerCanvas" width="650" height="220" class="bg-gray-900 rounded-lg shadow-md border border-teal-500"></canvas>
+  </div>
+
+  <!-- Array Traversal Animation -->
+  <div class="mb-10">
+    <h3 class="text-xl font-semibold text-green-300 mb-3 flex items-center">
+      <i class="fas fa-th-list mr-2"></i> Array Traversal
+    </h3>
+    <button onclick="startArrayTraversal()" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 mb-3">
+      ▶ Start Array Traversal
+    </button>
+    <canvas id="arrayTraversalCanvas" width="650" height="220" class="bg-gray-900 rounded-lg shadow-md border border-green-500"></canvas>
+  </div>
+
+  <!-- Function Call Animation -->
+  <div class="mb-10">
+    <h3 class="text-xl font-semibold text-blue-300 mb-3 flex items-center">
+      <i class="fas fa-code mr-2"></i> Function Call
+    </h3>
+    <button onclick="startFunctionCall()" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 mb-3">
+      ▶ Start Function Call
+    </button>
+    <canvas id="functionCallCanvas" width="650" height="220" class="bg-gray-900 rounded-lg shadow-md border border-blue-500"></canvas>
+  </div>
+
+  <!-- Linked List Animation -->
+  <div class="mb-10">
+    <h3 class="text-xl font-semibold text-pink-300 mb-3 flex items-center">
+      <i class="fas fa-link mr-2"></i> Linked List Traversal
+    </h3>
+    <button onclick="startLinkedListAnimation()" class="bg-pink-600 text-white px-4 py-2 rounded-lg hover:bg-pink-700 mb-3">
+      ▶ Start Linked List
+    </button>
+    <canvas id="linkedListCanvas" width="650" height="220" class="bg-gray-900 rounded-lg shadow-md border border-pink-400"></canvas>
+  </div>
+
+  <!-- Heap Allocation Animation -->
+  <div>
+    <h3 class="text-xl font-semibold text-yellow-300 mb-3 flex items-center">
+      <i class="fas fa-database mr-2"></i> Heap Allocation
+    </h3>
+    <button onclick="startHeapAnimation()" class="bg-yellow-500 text-black px-4 py-2 rounded-lg hover:bg-yellow-600 mb-3">
+      ▶ Start Heap Animation
+    </button>
+    <canvas id="heapCanvas" width="650" height="220" class="bg-gray-900 rounded-lg shadow-md border border-yellow-400"></canvas>
+  </div>
+</section>
+
+    <!-- Additional sections would follow the same pattern -->
+  </main>
+
+  <!-- Interview Questions Sidebar -->
+
+  <aside class="interview-questions">
+    <h3><i class="fas fa-question-circle"></i> Interview Questions</h3><!-- Interview Questions for Strings -->
+      <div class="question-group" data-section="dangling" style="display:none;">
+  <div class="question" onclick="toggleAnswer(this)">
+    Q1: What causes a dangling pointer?
+    <div class="answer">
+      Common causes:
+      <ul>
+        <li>Returning a pointer to a local variable that goes out of scope</li>
+        <li>Freeing dynamically allocated memory without nullifying the pointer</li>
+        <li>Using a pointer after <code>realloc</code> moves memory</li>
+        <li>Example:
+          <pre><code class="language-c">int* getLocal() {
+    int x = 10;
+    return &x;  // Dangling pointer
+}</code></pre>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q2: What are the risks of using a dangling pointer?
+    <div class="answer">
+      Risks:
+      <ul>
+        <li>Undefined behavior, including crashes or data corruption</li>
+        <li>Accessing invalid memory can overwrite critical data</li>
+        <li>Security vulnerabilities (e.g., exploits in unsafe code)</li>
+        <li>Example:
+          <pre><code class="language-c">int *ptr = malloc(sizeof(int));
+free(ptr);
+*ptr = 42;  // Undefined behavior</code></pre>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q3: How can you prevent dangling pointers?
+    <div class="answer">
+      Prevention techniques:
+      <ul>
+        <li>Set pointers to <code>NULL</code> after <code>free</code></li>
+        <li>Avoid returning pointers to local variables</li>
+        <li>Use smart pointers in C++ (e.g., <code>std::shared_ptr</code>)</li>
+        <li>Track memory lifetime in complex data structures</li>
+        <li>Example:
+          <pre><code class="language-c">int *ptr = malloc(sizeof(int));
+free(ptr);
+ptr = NULL;  // Prevents accidental use</code></pre>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q4: How does realloc contribute to dangling pointers?
+    <div class="answer">
+      Explanation:
+      <ul>
+        <li><code>realloc</code> may move memory, invalidating old pointers</li>
+        <li>Original pointer becomes dangling if not updated</li>
+        <li>Always use the return value of <code>realloc</code></li>
+        <li>Example:
+          <pre><code class="language-c">int *ptr = malloc(sizeof(int));
+int *new_ptr = realloc(ptr, 2 * sizeof(int));
+if (new_ptr) {
+    ptr = new_ptr;  // Update pointer
+} else {
+    // Handle failure, ptr still valid
+}</code></pre>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q5: How do you debug dangling pointer issues?
+    <div class="answer">
+      Debugging strategies:
+      <ul>
+        <li>Use tools like Valgrind or AddressSanitizer</li>
+        <li>Enable compiler warnings for uninitialized pointers</li>
+        <li>Log pointer values and memory operations</li>
+        <li>Set pointers to <code>NULL</code> after free to catch misuse</li>
+        <li>Example:
+          <pre><code class="language-c">int *ptr = malloc(sizeof(int));
+free(ptr);
+ptr = NULL;
+if (ptr) *ptr = 42;  // Caught by NULL check</code></pre>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q6: Why are dangling pointers dangerous in multithreaded programs?
+    <div class="answer">
+      Dangers:
+      <ul>
+        <li>One thread may free memory while another accesses it</li>
+        <li>Can lead to race conditions and data corruption</li>
+        <li>Requires synchronization (e.g., mutexes) to prevent</li>
+        <li>Example:
+          <pre><code class="language-c">int *ptr = malloc(sizeof(int));
+// Thread 1: free(ptr);
+// Thread 2: *ptr = 42;  // Undefined behavior</code></pre>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q7: How does scope affect dangling pointers?
+    <div class="answer">
+      Scope impact:
+      <ul>
+        <li>Local variables are deallocated when scope ends</li>
+        <li>Returning their address creates a dangling pointer</li>
+        <li>Use dynamic allocation for persistent memory</li>
+        <li>Example:
+          <pre><code class="language-c">int* bad() {
+    int x = 5;
+    return &x;  // Dangling after function ends
+}</code></pre>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q8: What is the role of NULL in preventing dangling pointers?
+    <div class="answer">
+      Role:
+      <ul>
+        <li>Setting pointers to <code>NULL</code> after free prevents accidental use</li>
+        <li>Enables safe checks before dereferencing</li>
+        <li>Reduces risk of accessing freed memory</li>
+        <li>Example:
+          <pre><code class="language-c">int *ptr = malloc(sizeof(int));
+free(ptr);
+ptr = NULL;  // Safe to check
+if (ptr == NULL) printf("Pointer freed\n");</code></pre>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q9: How do dangling pointers affect memory safety?
+    <div class="answer">
+      Impact:
+      <ul>
+        <li>Can overwrite unrelated memory, causing bugs</li>
+        <li>May expose sensitive data in security contexts</li>
+        <li>Leads to unpredictable program behavior</li>
+        <li>Example:
+          <pre><code class="language-c">int *ptr = malloc(sizeof(int));
+free(ptr);
+*ptr = 42;  // May corrupt unrelated memory</code></pre>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q10: How can smart pointers in C++ prevent dangling pointers?
+    <div class="answer">
+      Solution:
+      <ul>
+        <li>Smart pointers (e.g., <code>std::unique_ptr</code>, <code>std::shared_ptr</code>) manage memory automatically</li>
+        <li>Ensure memory is freed when no longer needed</li>
+        <li>Prevent access after deallocation</li>
+        <li>Example:
+          <pre><code class="language-c++">#include <memory>
+std::unique_ptr<int> ptr = std::make_unique<int>(42);
+// Automatically freed when ptr goes out of scope
+// No dangling pointer risk</code></pre>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+      <div class="question-group" data-section="const" style="display:none;">
+  <div class="question" onclick="toggleAnswer(this)">
+    Q1: What are the different types of const pointers?
+    <div class="answer">
+      Types:
+      <ul>
+        <li><code>const int *ptr</code>: Pointer to const int (data is const)</li>
+        <li><code>int *const ptr</code>: Const pointer to int (pointer is const)</li>
+        <li><code>const int *const ptr</code>: Both data and pointer are const</li>
+        <li>Example:
+          <pre><code class="language-c">int x = 10;
+const int *p1 = &x;     // Data const
+int *const p2 = &x;     // Pointer const
+const int *const p3 = &x;  // Both const</code></pre>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q2: Why use const in function parameters?
+    <div class="answer">
+      Benefits:
+      <ul>
+        <li>Prevents accidental modification of input data</li>
+        <li>Clarifies function intent (read-only access)</li>
+        <li>Enables compiler optimizations</li>
+        <li>Improves code maintainability</li>
+        <li>Example:
+          <pre><code class="language-c">void print(const int *arr, int n) {
+    // arr[0] = 5;  // Error: const data
+    for (int i = 0; i < n; i++) printf("%d ", arr[i]);
+}</code></pre>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q3: What are the risks of casting away const?
+    <div class="answer">
+      Risks:
+      <ul>
+        <li>Modifying const data leads to undefined behavior</li>
+        <li>Breaks const-correctness, confusing code intent</li>
+        <li>Can violate API contracts</li>
+        <li>Example:
+          <pre><code class="language-c">const int x = 10;
+int *ptr = (int*)&x;  // Cast away const
+*ptr = 20;            // Undefined behavior</code></pre>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q4: How does const improve code safety?
+    <div class="answer">
+      Safety benefits:
+      <ul>
+        <li>Prevents unintended modifications</li>
+        <li>Enforces read-only access in functions</li>
+        <li>Helps catch errors at compile time</li>
+        <li>Documents code intent clearly</li>
+        <li>Example:
+          <pre><code class="language-c">void process(const char *str) {
+    // str[0] = 'A';  // Compile-time error
+    printf("%s\n", str);
+}</code></pre>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q5: How do you combine const with pointers to pointers?
+    <div class="answer">
+      Usage:
+      <ul>
+        <li><code>const int **pp</code>: Pointer to pointer to const int</li>
+        <li><code>int *const *pp</code>: Pointer to const pointer to int</li>
+        <li><code>const int *const *pp</code>: Pointer to const pointer to const int</li>
+        <li>Example:
+          <pre><code class="language-c">int x = 10;
+const int *p = &x;
+const int **pp = &p;  // Pointer to pointer to const int</code></pre>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q6: What is const-correctness in C programming?
+    <div class="answer">
+      Definition:
+      <ul>
+        <li>Using <code>const</code> to ensure data is not modified unintentionally</li>
+        <li>Applies to variables, pointers, and function parameters</li>
+        <li>Improves code reliability and maintainability</li>
+        <li>Example:
+          <pre><code class="language-c">void safe_copy(const char *src, char *dst) {
+    // src[0] = 'X';  // Error: const
+    strcpy(dst, src);
+}</code></pre>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q7: How does const affect compiler optimizations?
+    <div class="answer">
+      Impact:
+      <ul>
+        <li>Allows compiler to assume data won't change via const pointers</li>
+        <li>Enables optimizations like constant folding</li>
+        <li>Improves performance in read-only operations</li>
+        <li>Example:
+          <pre><code class="language-c">const int size = 10;
+int arr[size];  // Compiler may optimize array size</code></pre>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q8: Can const be used with structure members?
+    <div class="answer">
+      Usage:
+      <ul>
+        <li>Structure members can be declared <code>const</code></li>
+        <li>Prevents modification of specific fields</li>
+        <li>Useful for immutable data within structures</li>
+        <li>Example:
+          <pre><code class="language-c">struct Data {
+    const int id;
+    char name[20];
+};
+struct Data d = {1, "Test"};
+// d.id = 2;  // Error: const</code></pre>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q9: How does const interact with function pointers?
+    <div class="answer">
+      Interaction:
+      <ul>
+        <li><code>const</code> can apply to function parameters in function pointers</li>
+        <li>Ensures parameters are not modified</li>
+        <li>Maintains const-correctness in callbacks</li>
+        <li>Example:
+          <pre><code class="language-c">void (*func)(const int *) = print;
+void print(const int *val) {
+    // *val = 5;  // Error: const
+    printf("%d\n", *val);
+}</code></pre>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q10: Why avoid casting away const in production code?
+    <div class="answer">
+      Reasons:
+      <ul>
+        <li>Violates const-correctness, leading to bugs</li>
+        <li>May cause undefined behavior if data is truly const</li>
+        <li>Breaks API contracts and assumptions</li>
+        <li>Example:
+          <pre><code class="language-c">const int x = 10;
+int *ptr = (int*)&x;
+*ptr = 20;  // Undefined behavior</code></pre>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+      <div class="question-group" data-section="volatile" style="display:none;">
+  <div class="question" onclick="toggleAnswer(this)">
+    Q1: What is the purpose of the volatile qualifier?
+    <div class="answer">
+      Purpose:
+      <ul>
+        <li>Tells compiler a variable may change unexpectedly</li>
+        <li>Prevents optimizations that assume stable values</li>
+        <li>Used for hardware registers, shared memory, or signal handlers</li>
+        <li>Example:
+          <pre><code class="language-c">volatile int flag = 0;
+while (!flag) {  // Compiler won't optimize loop away
+    // Wait for external change
+}</code></pre>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q2: When is volatile necessary in programming?
+    <div class="answer">
+      Use cases:
+      <ul>
+        <li>Accessing memory-mapped hardware registers</li>
+        <li>Variables modified by interrupt handlers</li>
+        <li>Shared variables in multithreaded programs</li>
+        <li>Example:
+          <pre><code class="language-c">#define HW_REG (*(volatile uint32_t*)0x1000)
+uint32_t value = HW_REG;  // Ensures actual read</code></pre>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q3: Why is volatile not sufficient for thread safety?
+    <div class="answer">
+      Limitations:
+      <ul>
+        <li>Only prevents compiler optimizations</li>
+        <li>Does not ensure atomicity or memory visibility</li>
+        <li>Requires mutexes or atomic operations for thread safety</li>
+        <li>Example:
+          <pre><code class="language-c">volatile int shared = 0;  // Not thread-safe
+// Use mutex or atomic operations instead
+#include <stdatomic.h>
+atomic_int safe_shared = 0;</code></pre>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q4: How does volatile interact with const?
+    <div class="answer">
+      Combination:
+      <ul>
+        <li><code>const volatile</code> means read-only but may change externally</li>
+        <li>Common in hardware registers that are read-only</li>
+        <li>Ensures no modification but forces actual reads</li>
+        <li>Example:
+          <pre><code class="language-c">const volatile int *reg = (const volatile int*)0x2000;
+// *reg = 5;  // Error: const
+int value = *reg;  // Always reads hardware</code></pre>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q5: What happens if volatile is not used when needed?
+    <div class="answer">
+      Consequences:
+      <ul>
+        <li>Compiler may cache variable values, missing external changes</li>
+        <li>Can cause incorrect program behavior (e.g., infinite loops)</li>
+        <li>Critical in embedded systems and real-time applications</li>
+        <li>Example:
+          <pre><code class="language-c">int flag = 0;  // Without volatile
+while (!flag) {}  // May be optimized to infinite loop</code></pre>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q6: How does volatile affect compiler optimizations?
+    <div class="answer">
+      Impact:
+      <ul>
+        <li>Forces compiler to read/write variable each time</li>
+        <li>Disables optimizations like caching or loop unrolling</li>
+        <li>May reduce performance but ensures correctness</li>
+        <li>Example:
+          <pre><code class="language-c">volatile int x = 0;
+x = 5;  // Compiler won't optimize away write
+int y = x;  // Forces read from memory</code></pre>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q7: Can volatile be used with pointers to pointers?
+    <div class="answer">
+      Usage:
+      <ul>
+        <li><code>volatile int **pp</code>: Pointer to pointer to volatile int</li>
+        <li>Ensures pointed-to data is treated as volatile</li>
+        <li>Common in complex hardware or shared memory scenarios</li>
+        <li>Example:
+          <pre><code class="language-c">volatile int x = 0;
+volatile int *p = &x;
+volatile int **pp = &p;  // Pointer to pointer to volatile int</code></pre>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q8: How does volatile apply to hardware registers?
+    <div class="answer">
+      Application:
+      <ul>
+        <li>Ensures actual reads/writes to memory-mapped registers</li>
+        <li>Prevents compiler from optimizing away accesses</li>
+        <li>Critical for embedded systems</li>
+        <li>Example:
+          <pre><code class="language-c">#define REG (*(volatile uint32_t*)0x3000)
+REG = 0xFF;  // Ensures write to hardware</code></pre>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q9: What is the difference between volatile and atomic variables?
+    <div class="answer">
+      Differences:
+      <ul>
+        <li><code>volatile</code>: Prevents compiler optimizations, no thread safety</li>
+        <li><code>atomic</code>: Ensures thread-safe operations with memory ordering</li>
+        <li><code>volatile</code> for hardware; <code>atomic</code> for multithreading</li>
+        <li>Example:
+          <pre><code class="language-c">volatile int v = 0;  // Not thread-safe
+#include <stdatomic.h>
+atomic_int a = 0;    // Thread-safe</code></pre>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q10: How do you debug issues caused by missing volatile qualifiers?
+    <div class="answer">
+      Debugging strategies:
+      <ul>
+        <li>Check for unexpected program behavior (e.g., missed updates)</li>
+        <li>Use debuggers to monitor variable accesses</li>
+        <li>Inspect generated assembly for optimizations</li>
+        <li>Add <code>volatile</code> where external changes are expected</li>
+        <li>Example:
+          <pre><code class="language-c">volatile int *reg = (volatile int*)0x4000;
+int value = *reg;  // Ensures hardware read</code></pre>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+      <div class="question-group" data-section="null" style="display:none;">
+  <div class="question" onclick="toggleAnswer(this)">
+    Q1: What is a null pointer and why is it used?
+    <div class="answer">
+      Definition and purpose:
+      <ul>
+        <li>A null pointer is a pointer set to <code>NULL</code>, typically <code>(void*)0</code></li>
+        <li>Used to indicate a pointer does not point to valid memory</li>
+        <li>Prevents accidental dereferencing of uninitialized pointers</li>
+        <li>Common in data structures to mark ends (e.g., linked lists)</li>
+        <li>Example:
+          <pre><code class="language-c">int *ptr = NULL;  // Safe initialization
+if (ptr == NULL) {
+    printf("Not pointing to valid memory\n");
+}</code></pre>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q2: What happens if you dereference a null pointer?
+    <div class="answer">
+      Consequences:
+      <ul>
+        <li>Results in undefined behavior</li>
+        <li>Typically causes a segmentation fault or program crash</li>
+        <li>May corrupt memory in rare cases</li>
+        <li>Example:
+          <pre><code class="language-c">int *ptr = NULL;
+int x = *ptr;  // Undefined behavior, likely crash</code></pre>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q3: How can you safely handle null pointers in code?
+    <div class="answer">
+      Best practices:
+      <ul>
+        <li>Always initialize pointers to <code>NULL</code></li>
+        <li>Check for <code>NULL</code> before dereferencing</li>
+        <li>Set pointers to <code>NULL</code> after freeing memory</li>
+        <li>Use assertions in debug builds for critical checks</li>
+        <li>Example:
+          <pre><code class="language-c">int *ptr = NULL;
+if (ptr != NULL) {
+    *ptr = 42;  // Safe dereference
+}</code></pre>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q4: Why is NULL preferred over 0 for pointer initialization?
+    <div class="answer">
+      Reasons:
+      <ul>
+        <li><code>NULL</code> is a macro explicitly meant for pointers</li>
+        <li>Improves code readability and intent</li>
+        <li>Avoids confusion with integer zero</li>
+        <li>Portable across C and C++ standards</li>
+        <li>Example:
+          <pre><code class="language-c">int *ptr = NULL;  // Clearer than ptr = 0</code></pre>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q5: How are null pointers used in dynamic memory allocation?
+    <div class="answer">
+      Usage:
+      <ul>
+        <li>Check <code>malloc</code>/<code>calloc</code> return for <code>NULL</code> to handle allocation failures</li>
+        <li>Initialize pointers to <code>NULL</code> before allocation</li>
+        <li>Set to <code>NULL</code> after <code>free</code> to prevent dangling pointers</li>
+        <li>Example:
+          <pre><code class="language-c">int *ptr = NULL;
+ptr = malloc(sizeof(int));
+if (ptr == NULL) {
+    exit(1);  // Handle failure
+}
+free(ptr);
+ptr = NULL;  // Prevent dangling pointer</code></pre>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q6: How do null pointers help in linked list implementations?
+    <div class="answer">
+      Role in linked lists:
+      <ul>
+        <li>Mark the end of a linked list</li>
+        <li>Indicate an empty list when head is <code>NULL</code></li>
+        <li>Facilitate safe traversal and manipulation</li>
+        <li>Example:
+          <pre><code class="language-c">struct Node {
+    int data;
+    struct Node *next;
+};
+struct Node *head = NULL;  // Empty list
+if (head == NULL) {
+    printf("List is empty\n");
+}</code></pre>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q7: What is the difference between a null pointer and an uninitialized pointer?
+    <div class="answer">
+      Key differences:
+      <ul>
+        <li>Null pointer: Explicitly set to <code>NULL</code>, safe to check</li>
+        <li>Uninitialized pointer: Contains garbage, dereferencing is dangerous</li>
+        <li>Null pointer is intentional; uninitialized is a bug</li>
+        <li>Example:
+          <pre><code class="language-c">int *null_ptr = NULL;  // Safe
+int *uninit_ptr;       // Dangerous, undefined behavior
+if (null_ptr == NULL) {
+    printf("Safe check\n");
+}</code></pre>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q8: How does NULL behave in pointer comparisons?
+    <div class="answer">
+      Behavior:
+      <ul>
+        <li><code>NULL</code> pointers compare equal to each other</li>
+        <li>Can be compared with any pointer using <code>==</code> or <code>!=</code></li>
+        <li>Non-NULL pointers to same address are equal</li>
+        <li>Example:
+          <pre><code class="language-c">int *p1 = NULL;
+int *p2 = NULL;
+if (p1 == p2) {
+    printf("Both are NULL\n");
+}</code></pre>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q9: Can you pass a null pointer to a function?
+    <div class="answer">
+      Usage:
+      <ul>
+        <li>Yes, often used to indicate optional or missing data</li>
+        <li>Function must check for <code>NULL</code> to avoid crashes</li>
+        <li>Common in APIs for flexibility</li>
+        <li>Example:
+          <pre><code class="language-c">void process(int *ptr) {
+    if (ptr == NULL) {
+        printf("No data provided\n");
+        return;
+    }
+    *ptr = 42;
+}</code></pre>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q10: How do null pointers interact with standard library functions?
+    <div class="answer">
+      Interaction:
+      <ul>
+        <li>Some functions (e.g., <code>free(NULL)</code>) are safe with <code>NULL</code></li>
+        <li>Others (e.g., <code>strlen(NULL)</code>) cause undefined behavior</li>
+        <li>Always check documentation for <code>NULL</code> handling</li>
+        <li>Example:
+          <pre><code class="language-c">int *ptr = NULL;
+free(ptr);  // Safe, no-op
+// strlen(NULL);  // Undefined behavior</code></pre>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+      <div class="question-group" data-section="bitwise" style="display:none;">
+  <div class="question" onclick="toggleAnswer(this)">
+    Q1: What are bitwise operations used for in C?
+    <div class="answer">
+      Uses:
+      <ul>
+        <li>Manipulating individual bits for low-level control</li>
+        <li>Setting, clearing, or toggling flags</li>
+        <li>Optimizing arithmetic operations (e.g., multiplication/division by 2)</li>
+        <li>Example:
+          <pre><code class="language-c">unsigned int flag = 0x01; // 00000001
+flag |= 0x02; // Set second bit: 00000011</code></pre>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q2: What is the difference between bitwise AND and OR?
+    <div class="answer">
+      Differences:
+      <ul>
+        <li>AND (&): Sets bit to 1 if both bits are 1</li>
+        <li>OR (|): Sets bit to 1 if either bit is 1</li>
+        <li>Used for masking (AND) or combining flags (OR)</li>
+        <li>Example:
+          <pre><code class="language-c">unsigned int a = 0x0F; // 00001111
+unsigned int b = 0xF0; // 11110000
+printf("AND: %x\n", a & b); // 0x00
+printf("OR: %x\n", a | b); // 0xFF</code></pre>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q3: How does the bitwise XOR operator work?
+    <div class="answer">
+      Explanation:
+      <ul>
+        <li>XOR (^): Sets bit to 1 if exactly one bit is 1</li>
+        <li>Useful for toggling bits or checking differences</li>
+        <li>XOR with itself cancels out (a ^ a = 0)</li>
+        <li>Example:
+          <pre><code class="language-c">unsigned int a = 0x0F; // 00001111
+unsigned int b = 0x0A; // 00001010
+printf("XOR: %x\n", a ^ b); // 0x05 (00000101)</code></pre>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q4: What is the purpose of the bitwise NOT operator?
+    <div class="answer">
+      Purpose:
+      <ul>
+        <li>NOT (~): Inverts all bits (1 to 0, 0 to 1)</li>
+        <li>Useful for creating masks or clearing flags</li>
+        <li>Depends on integer size (e.g., 32-bit)</li>
+        <li>Example:
+          <pre><code class="language-c">unsigned int a = 0x0F; // 00001111
+printf("NOT: %x\n", ~a); // 0xFFFFFFF0 (in 32-bit)</code></pre>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q5: How do shift operators work in C?
+    <div class="answer">
+      Explanation:
+      <ul>
+        <li>Left shift (<<): Shifts bits left, fills with 0s</li>
+        <li>Right shift (>>): Shifts bits right, fills based on type/sign</li>
+        <li>Shifting by n is equivalent to multiplying/dividing by 2^n</li>
+        <li>Example:
+          <pre><code class="language-c">unsigned int a = 0x04; // 00000100
+printf("Left: %x\n", a << 1); // 0x08 (00001000)
+printf("Right: %x\n", a >> 1); // 0x02 (00000010)</code></pre>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q6: How can bitwise operations optimize code?
+    <div class="answer">
+      Optimization:
+      <ul>
+        <li>Faster than arithmetic for powers of 2</li>
+        <li>Compact storage using bit flags</li>
+        <li>Reduces conditional branches in some cases</li>
+        <li>Example:
+          <pre><code class="language-c">int x = 16;
+// Instead of x / 4
+printf("Result: %d\n", x >> 2); // 4</code></pre>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q7: What are common pitfalls with bitwise operations?
+    <div class="answer">
+      Pitfalls:
+      <ul>
+        <li>Platform-dependent behavior (e.g., signed right shift)</li>
+        <li>Overflow or undefined behavior with excessive shifts</li>
+        <li>Assuming specific integer sizes</li>
+        <li>Example:
+          <pre><code class="language-c">int x = -1;
+printf("Right shift: %x\n", x >> 1); // Sign-extended, platform-specific</code></pre>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q8: How are bitwise operations used in flags?
+    <div class="answer">
+      Usage:
+      <ul>
+        <li>Combine multiple boolean values in one integer</li>
+        <li>Use AND to check, OR to set, XOR to toggle</li>
+        <li>Efficient for configuration settings</li>
+        <li>Example:
+          <pre><code class="language-c">#define READ 0x01
+#define WRITE 0x02
+unsigned int flags = 0;
+flags |= READ | WRITE; // Set flags
+if (flags & READ) printf("Read enabled\n");</code></pre>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q9: Why is endianness important in bitwise operations?
+    <div class="answer">
+      Importance:
+      <ul>
+        <li>Bit order depends on system endianness</li>
+        <li>Affects how bytes are interpreted in multi-byte types</li>
+        <li>Critical for cross-platform code</li>
+        <li>Example:
+          <pre><code class="language-c">unsigned int x = 0x12345678;
+unsigned char *p = (unsigned char*)&x;
+printf("First byte: %x\n", p[0]); // Depends on endianness</code></pre>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q10: How do you swap two variables using XOR?
+    <div class="answer">
+      Technique:
+      <ul>
+        <li>XOR-based swap avoids temporary variable</li>
+        <li>Uses property: (a ^ b) ^ b = a</li>
+        <li>Not always recommended due to readability</li>
+        <li>Example:
+          <pre><code class="language-c">int a = 5, b = 10;
+a ^= b;
+b ^= a;
+a ^= b; // a=10, b=5
+printf("a=%d, b=%d\n", a, b);</code></pre>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="question-group" data-section="debug" style="display:none;">
+  <div class="question" onclick="toggleAnswer(this)">
+    Q1: What is printf debugging, and when is it useful?
+    <div class="answer">
+      Explanation:
+      <ul>
+        <li>Uses printf() to log variable states or program flow</li>
+        <li>Useful for quick checks in small programs</li>
+        <li>Non-intrusive but can clutter code</li>
+        <li>Example:
+          <pre><code class="language-c">int x = 5;
+printf("DEBUG: x=%d\n", x);</code></pre>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q2: What is the role of assertions in debugging?
+    <div class="answer">
+      Role:
+      <ul>
+        <li>Assert() checks conditions at runtime</li>
+        <li>Terminates program if condition fails</li>
+        <li>Helps catch logical errors early</li>
+        <li>Example:
+          <pre><code class="language-c">#include <assert.h>
+int x = 0;
+assert(x != 0); // Aborts if x is 0</code></pre>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q3: How does gdb assist in debugging C programs?
+    <div class="answer">
+      Assistance:
+      <ul>
+        <li>Allows breakpoints, stepping, and variable inspection</li>
+        <li>Tracks call stack and memory state</li>
+        <li>Requires -g flag during compilation</li>
+        <li>Example:
+          <pre><code class="language-c">gcc -g program.c
+gdb ./a.out
+(gdb) break main
+(gdb) run</code></pre>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q4: What is Valgrind, and how does it help debugging?
+    <div class="answer">
+      Explanation:
+      <ul>
+        <li>Tool for detecting memory leaks and invalid accesses</li>
+        <li>Identifies issues like uninitialized variables</li>
+        <li>Works with compiled binaries</li>
+        <li>Example:
+          <pre><code class="language-c">valgrind ./program
+// Reports memory leaks or invalid reads/writes</code></pre>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q5: How can AddressSanitizer help in debugging?
+    <div class="answer">
+      Role:
+      <ul>
+        <li>Compiler-based tool for detecting memory errors</li>
+        <li>Catches buffer overflows, use-after-free</li>
+        <li>Requires -fsanitize=address flag</li>
+        <li>Example:
+          <pre><code class="language-c">gcc -fsanitize=address -g program.c
+./a.out // Reports memory errors</code></pre>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q6: Why is it important to compile with debugging symbols?
+    <div class="answer">
+      Importance:
+      <ul>
+        <li>-g flag includes symbol table for debugging</li>
+        <li>Enables source code mapping in debuggers</li>
+        <li>Facilitates variable tracking and stack traces</li>
+        <li>Example:
+          <pre><code class="language-c">gcc -g program.c
+gdb ./a.out
+(gdb) list // Shows source code</code></pre>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q7: How can you debug segmentation faults?
+    <div class="answer">
+      Techniques:
+      <ul>
+        <li>Use gdb to find faulting line</li>
+        <li>Check for null pointers or invalid memory access</li>
+        <li>Use tools like Valgrind or AddressSanitizer</li>
+        <li>Example:
+          <pre><code class="language-c">int *ptr = NULL;
+*ptr = 42; // Segmentation fault
+// Debug with gdb: (gdb) backtrace</code></pre>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q8: What is a core dump, and how is it used in debugging?
+    <div class="answer">
+      Explanation:
+      <ul>
+        <li>Core dump is a snapshot of program state at crash</li>
+        <li>Used with gdb to analyze fault cause</li>
+        <li>Requires enabling core dumps (e.g., ulimit)</li>
+        <li>Example:
+          <pre><code class="language-c">ulimit -c unlimited
+./program // Crashes, creates core file
+gdb ./program core</code></pre>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q9: How do you debug memory leaks in C?
+    <div class="answer">
+      Strategies:
+      <ul>
+        <li>Use Valgrind’s memcheck to track allocations</li>
+        <li>Manually track malloc/free pairs</li>
+        <li>Use tools like AddressSanitizer for detection</li>
+        <li>Example:
+          <pre><code class="language-c">int *ptr = malloc(sizeof(int));
+// Forgot to free(ptr)
+valgrind --leak-check=full ./program</code></pre>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q10: How can logging improve debugging?
+    <div class="answer">
+      Benefits:
+      <ul>
+        <li>Logs track program flow and state</li>
+        <li>Useful in production or hard-to-reproduce bugs</li>
+        <li>Can be controlled with debug levels</li>
+        <li>Example:
+          <pre><code class="language-c">#define DEBUG
+#ifdef DEBUG
+#define LOG(msg, ...) printf("DEBUG: " msg, ##__VA_ARGS__)
+#else
+#define LOG(msg, ...)
+#endif
+LOG("Value: %d\n", x);</code></pre>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="question-group" data-section="multiarrays" style="display:none;">
+  <div class="question" onclick="toggleAnswer(this)">
+    Q1: What is a multi-dimensional array in C?
+    <div class="answer">
+      Definition:
+      <ul>
+        <li>An array of arrays, used for grids or matrices</li>
+        <li>Stored in row-major order in memory</li>
+        <li>Common for mathematical or tabular data</li>
+        <li>Example:
+          <pre><code class="language-c">int matrix[2][3] = {{1, 2, 3}, {4, 5, 6}};</code></pre>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q2: How is a 2D array stored in memory?
+    <div class="answer">
+      Storage:
+      <ul>
+        <li>Contiguous memory in row-major order</li>
+        <li>Each row is stored sequentially</li>
+        <li>Access via pointer arithmetic: matrix[i][j] = *(matrix + i*cols + j)</li>
+        <li>Example:
+          <pre><code class="language-c">int matrix[2][2] = {{1, 2}, {3, 4}};
+printf("%d\n", matrix[1][0]); // 3</code></pre>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q3: How do you initialize a multi-dimensional array?
+    <div class="answer">
+      Initialization:
+      <ul>
+        <li>Use nested braces for static initialization</li>
+        <li>Can omit inner braces for linear initialization</li>
+        <li>Partial initialization fills rest with zeros</li>
+        <li>Example:
+          <pre><code class="language-c">int matrix[2][2] = {{1, 2}, {3, 4}};
+// Or: int matrix[2][2] = {1, 2, 3, 4};
+printf("%d\n", matrix[0][1]); // 2</code></pre>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q4: How do you dynamically allocate a 2D array?
+    <div class="answer">
+      Allocation:
+      <ul>
+        <li>Use malloc() for contiguous or pointer-to-pointer</li>
+        <li>Requires manual memory management</li>
+        <li>Free all levels of allocation</li>
+        <li>Example:
+          <pre><code class="language-c">int **matrix = malloc(rows * sizeof(int *));
+for (int i = 0; i < rows; i++)
+    matrix[i] = malloc(cols * sizeof(int));
+free(matrix[0]); free(matrix);</code></pre>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q5: What are the benefits of multi-dimensional arrays?
+    <div class="answer">
+      Benefits:
+      <ul>
+        <li>Simplify matrix or grid operations</li>
+        <li>Enable intuitive indexing (e.g., matrix[i][j])</li>
+        <li>Efficient for fixed-size data</li>
+        <li>Example:
+          <pre><code class="language-c">int matrix[2][2] = {{1, 2}, {3, 4}};
+printf("Sum: %d\n", matrix[0][0] + matrix[1][1]); // 5</code></pre>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q6: What are the limitations of multi-dimensional arrays?
+    <div class="answer">
+      Limitations:
+      <ul>
+        <li>Fixed size for static arrays</li>
+        <li>Memory waste for sparse data</li>
+        <li>Complex to resize dynamically</li>
+        <li>Example:
+          <pre><code class="language-c">int matrix[100][100]; // Wastes space if mostly empty</code></pre>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q7: How do you pass a 2D array to a function?
+    <div class="answer">
+      Passing:
+      <ul>
+        <li>Specify column size in function parameter</li>
+        <li>Use pointer-to-array or pointer-to-pointer</li>
+        <li>Pass dimensions explicitly if dynamic</li>
+        <li>Example:
+          <pre><code class="language-c">void print_matrix(int rows, int cols, int matrix[][cols]) {
+    for (int i = 0; i < rows; i++)
+        for (int j = 0; j < cols; j++)
+            printf("%d ", matrix[i][j]);
+}</code></pre>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q8: How does pointer arithmetic work with 2D arrays?
+    <div class="answer">
+      Arithmetic:
+      <ul>
+        <li>Access elements using pointer offsets</li>
+        <li>Row-major: matrix[i][j] = *(matrix + i*cols + j)</li>
+        <li>Requires knowing column size</li>
+        <li>Example:
+          <pre><code class="language-c">int matrix[2][2] = {{1, 2}, {3, 4}};
+int *ptr = &matrix[0][0];
+printf("%d\n", *(ptr + 2)); // 3</code></pre>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q9: How do you handle jagged arrays in C?
+    <div class="answer">
+      Handling:
+      <ul>
+        <li>Jagged arrays have rows of different lengths</li>
+        <li>Use pointer-to-pointer with dynamic allocation</li>
+        <li>Requires separate allocation for each row</li>
+        <li>Example:
+          <pre><code class="language-c">int **jagged = malloc(2 * sizeof(int *));
+jagged[0] = malloc(3 * sizeof(int));
+jagged[1] = malloc(2 * sizeof(int));</code></pre>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q10: How can you avoid memory leaks with dynamic 2D arrays?
+    <div class="answer">
+      Avoidance:
+      <ul>
+        <li>Free each row before freeing the array of pointers</li>
+        <li>Track allocations to ensure proper deallocation</li>
+        <li>Use tools like Valgrind to detect leaks</li>
+        <li>Example:
+          <pre><code class="language-c">int **matrix = malloc(rows * sizeof(int *));
+for (int i = 0; i < rows; i++)
+    matrix[i] = malloc(cols * sizeof(int));
+for (int i = 0; i < rows; i++)
+    free(matrix[i]);
+free(matrix);</code></pre>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+      <div class="question-group" data-section="typecast" style="display:none;">
+  <div class="question" onclick="toggleAnswer(this)">
+    Q1: What is the difference between (int*)ptr and *(int*)ptr?
+    <div class="answer">
+      Key difference:
+      <ul>
+        <li><code>(int*)ptr</code>: Casts ptr to int pointer type</li>
+        <li><code>*(int*)ptr</code>: Casts ptr to int pointer then dereferences</li>
+        <li>Example:
+          <pre><code class="language-c">void *ptr = &x;
+int *iptr = (int*)ptr;   // Pointer cast
+int value = *(int*)ptr;  // Pointer cast + dereference</code></pre>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q2: When is pointer typecasting necessary?
+    <div class="answer">
+      Common use cases:
+      <ul>
+        <li>Working with generic (void*) interfaces</li>
+        <li>Accessing hardware registers</li>
+        <li>Implementing memory allocators</li>
+        <li>Type punning (with caution)</li>
+        <li>Interfacing with legacy code</li>
+      </ul>
+      Always prefer type-safe alternatives when possible.
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q3: What are the dangers of pointer typecasting?
+    <div class="answer">
+      Major risks:
+      <ul>
+        <li><strong>Alignment violations</strong>: Crash on some architectures</li>
+        <li><strong>Strict aliasing violations</strong>: Undefined behavior</li>
+        <li><strong>Size mismatches</strong>: Accessing beyond bounds</li>
+        <li><strong>Type confusion</strong>: Logical errors</li>
+        <li><strong>Endianness issues</strong>: Portability problems</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q4: How would you safely convert between float and int representations?
+    <div class="answer">
+      Safe approaches:
+      <pre><code class="language-c">// 1. Using memcpy (type punning)
+float f = 3.14f;
+int i;
+memcpy(&i, &f, sizeof(int));
+
+// 2. Using union (C99)
+typedef union {
+    float f;
+    int i;
+} FloatInt;
+
+FloatInt fi;
+fi.f = 3.14f;
+int i = fi.i;</code></pre>
+      Both methods avoid strict aliasing violations.
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q5: What is strict aliasing and how does it affect casting?
+    <div class="answer">
+      Strict aliasing rule:
+      <ul>
+        <li>Compiler can assume pointers of different types don't alias</li>
+        <li>Violations lead to undefined behavior</li>
+        <li>Exceptions:
+          <ul>
+            <li>char* can alias any type</li>
+            <li>Types with similar representations</li>
+          </ul>
+        </li>
+        <li>Example violation:
+          <pre><code class="language-c">int x = 42;
+float *f = (float*)&x;  // Violation
+*f = 3.14;              // Undefined behavior</code></pre>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q6: How would you implement a generic swap function?
+    <div class="answer">
+      Using void pointers:
+      <pre><code class="language-c">void swap(void *a, void *b, size_t size) {
+    char temp[size];  // C99 VLA
+    memcpy(temp, a, size);
+    memcpy(a, b, size);
+    memcpy(b, temp, size);
+}
+
+// Usage
+int x = 5, y = 10;
+swap(&x, &y, sizeof(int));</code></pre>
+      This works for any type without violating strict aliasing.
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q7: What is the purpose of the restrict keyword in pointer casting?
+    <div class="answer">
+      <code>restrict</code> tells the compiler the pointer doesn't alias:
+      <pre><code class="language-c">void copy(int *restrict dest, const int *restrict src, int n) {
+    while (n--) *dest++ = *src++;
+}</code></pre>
+      Benefits:
+      <ul>
+        <li>Enables compiler optimizations</li>
+        <li>Makes pointer relationships clearer</li>
+        <li>Particularly useful with typecasting</li>
+      </ul>
+      Violating restrict assumptions leads to undefined behavior.
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q8: How does endianness affect pointer typecasting?
+    <div class="answer">
+      Endianness determines byte order in multi-byte types:
+      <pre><code class="language-c">int x = 0x12345678;
+char *c = (char*)&x;
+// Little-endian: c[0] = 0x78, c[1] = 0x56, ...
+// Big-endian:    c[0] = 0x12, c[1] = 0x34, ...</code></pre>
+      Considerations:
+      <ul>
+        <li>Affects interpretation when casting between types</li>
+        <li>Important for network protocols and file formats</li>
+        <li>Use htonl()/ntohl() for network byte order</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q9: What is a double pointer cast and when is it used?
+    <div class="answer">
+      Casting through two pointer types:
+      <pre><code class="language-c">float f = 3.14f;
+void *vptr = &f;
+int *iptr = (int*)vptr;  // Double cast: float* -> void* -> int*</code></pre>
+      Common uses:
+      <ul>
+        <li>Opaque pointer implementations</li>
+        <li>Generic container libraries</li>
+        <li>Low-level memory manipulation</li>
+      </ul>
+      Requires careful alignment and type size matching.
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q10: How would you safely access hardware registers with pointers?
+    <div class="answer">
+      Using volatile and proper typing:
+      <pre><code class="language-c">#define REGISTER (*(volatile uint32_t*)0x12345678)
+
+void setBit() {
+    REGISTER |= 0x1;  // Atomic operation
+}</code></pre>
+      Key points:
+      <ul>
+        <li><code>volatile</code> prevents compiler optimizations</li>
+        <li>Use exact-width integer types</li>
+        <li>Ensure proper alignment</li>
+        <li>Document memory-mapped assumptions</li>
+      </ul>
+    </div>
+  </div>
+</div>
+      <!-- Interview Questions for Pointers to Structs -->
+<div class="question-group" data-section="structs" style="display:none;">
+  <div class="question" onclick="toggleAnswer(this)">
+    Q1: What is the difference between (*ptr).member and ptr->member?
+    <div class="answer">
+      They are equivalent but the arrow operator is preferred:
+      <ul>
+        <li><code>(*ptr).member</code>: Dereference then dot operator</li>
+        <li><code>ptr->member</code>: Arrow operator combines dereference and member access</li>
+        <li>Example:
+          <pre><code class="language-c">Student s, *ptr = &s;
+(*ptr).id = 101;  // Valid but awkward
+ptr->id = 101;    // Preferred style</code></pre>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q2: How would you pass a structure to a function for modification?
+    <div class="answer">
+      Three approaches:
+      <pre><code class="language-c">// 1. Pass pointer to structure (most common)
+void modify(Student *s) {
+    s->id = 100;
+}
+
+// 2. Pass structure by value (inefficient)
+Student modify(Student s) {
+    s.id = 100;
+    return s;
+}
+
+// 3. Pass pointer-to-pointer if need to change pointer itself
+void create(Student **s) {
+    *s = malloc(sizeof(Student));
+    (*s)->id = 100;
+}</code></pre>
+      The first approach is most efficient and commonly used.
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q3: How would you implement a deep copy of a structure with pointers?
+    <div class="answer">
+      <pre><code class="language-c">typedef struct {
+    char *name;
+    int age;
+} Person;
+
+Person* deepCopy(Person *src) {
+    Person *dest = malloc(sizeof(Person));
+    dest->age = src->age;
+    dest->name = malloc(strlen(src->name) + 1);
+    strcpy(dest->name, src->name);
+    return dest;
+}</code></pre>
+      Key points:
+      <ul>
+        <li>Allocate new structure</li>
+        <li>Copy primitive members directly</li>
+        <li>Allocate new memory for pointer members</li>
+        <li>Copy contents of pointer members</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q4: What is a self-referential structure and where is it used?
+    <div class="answer">
+      A structure containing a pointer to its own type:
+      <pre><code class="language-c">typedef struct Node {
+    int data;
+    struct Node *next;  // Self-reference
+} Node;</code></pre>
+      Common uses:
+      <ul>
+        <li>Linked lists</li>
+        <li>Trees</li>
+        <li>Graphs</li>
+        <li>Other recursive data structures</li>
+      </ul>
+      The pointer allows chaining structures together dynamically.
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q5: How would you implement a function to free a linked list?
+    <div class="answer">
+      <pre><code class="language-c">void freeList(Node **head) {
+    Node *current = *head;
+    while (current != NULL) {
+        Node *temp = current;
+        current = current->next;
+        free(temp);
+    }
+    *head = NULL;  // Prevent dangling pointer
+}</code></pre>
+      Important points:
+      <ul>
+        <li>Traverse the list with two pointers</li>
+        <li>Free nodes one at a time</li>
+        <li>Maintain next pointer before freeing</li>
+        <li>Set head to NULL after freeing all nodes</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q6: Explain how structure pointers enable polymorphism in C.
+    <div class="answer">
+      Using function pointers in structures:
+      <pre><code class="language-c">typedef struct {
+    void (*display)(void *);
+    void *data;
+} Object;
+
+void displayInt(void *data) {
+    printf("%d", *(int*)data);
+}
+
+void displayFloat(void *data) {
+    printf("%f", *(float*)data);
+}
+
+int main() {
+    int i = 10;
+    float f = 3.14;
+
+    Object o1 = {displayInt, &i};
+    Object o2 = {displayFloat, &f};
+
+    o1.display(o1.data);  // Prints 10
+    o2.display(o2.data);  // Prints 3.14
+}</code></pre>
+      This pattern enables different behaviors for objects with the same interface.
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q7: What are the advantages of using pointers to structures?
+    <div class="answer">
+      Benefits include:
+      <ul>
+        <li><strong>Efficiency</strong>: Avoid copying large structures</li>
+        <li><strong>Dynamic allocation</strong>: Create structures at runtime</li>
+        <li><strong>Modification</strong>: Change structures in functions</li>
+        <li><strong>Data structures</strong>: Build linked lists, trees, etc.</li>
+        <li><strong>Memory sharing</strong>: Multiple pointers can reference same structure</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q8: How would you handle a structure with flexible array members?
+    <div class="answer">
+      <pre><code class="language-c">typedef struct {
+    int length;
+    double data[];  // Flexible array member
+} Vector;
+
+Vector* createVector(int length) {
+    Vector *v = malloc(sizeof(Vector) + length * sizeof(double));
+    v->length = length;
+    return v;
+}
+
+int main() {
+    Vector *v = createVector(10);
+    v->data[0] = 3.14;  // Access array
+    free(v);
+}</code></pre>
+      Key points:
+      <ul>
+        <li>FAM must be last member</li>
+        <li>Allocate extra space for the array</li>
+        <li>Access like normal array</li>
+        <li>Single allocation for structure + array</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q9: What is a structure padding and how does it affect pointers?
+    <div class="answer">
+      Structure padding is alignment-added space between members:
+      <pre><code class="language-c">typedef struct {
+    char c;   // 1 byte
+    // 3 bytes padding (assuming 4-byte alignment)
+    int i;    // 4 bytes
+} Padded;</code></pre>
+      Pointer considerations:
+      <ul>
+        <li>Pointer arithmetic must account for padding</li>
+        <li>Direct memory operations may need alignment</li>
+        <li>sizeof() includes padding</li>
+        <li>Use <code>#pragma pack</code> to control padding</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q10: How would you implement a generic container using structure pointers?
+    <div class="answer">
+      Using void pointers:
+      <pre><code class="language-c">typedef struct {
+    void *data;
+    size_t size;
+    void (*print)(void *);
+} Container;
+
+void printInt(void *data) {
+    printf("%d", *(int*)data);
+}
+
+int main() {
+    int x = 42;
+    Container c = {&x, sizeof(int), printInt};
+    c.print(c.data);  // Prints 42
+    return 0;
+}</code></pre>
+      This pattern allows storing any data type while maintaining type-specific operations.
+    </div>
+  </div>
+</div>
+<div class="question-group" data-section="strings" style="display:none;">
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q1: How do you reverse a string in place?
+    <div class="answer">
+      To reverse a string in place, swap characters from the start and end, moving toward the center.
+      <pre><code class="language-c">void reverseString(char *str) {
+    if (!str) return;
+    int left = 0, right = strlen(str) - 1;
+    while (left < right) {
+        char temp = str[left];
+        str[left++] = str[right];
+        str[right--] = temp;
+    }
+}</code></pre>
+      Key points:
+      <ul>
+        <li>Time complexity: O(n/2) swaps, where n is string length</li>
+        <li>Space complexity: O(1) as it modifies the string in place</li>
+        <li>Handles null pointer check for safety</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q2: How would you implement strlen()?
+    <div class="answer">
+      Implementation to calculate string length:
+      <pre><code class="language-c">size_t strlen(const char *str) {
+    size_t len = 0;
+    while (*str++) len++;
+    return len;
+}</code></pre>
+      Key points:
+      <ul>
+        <li>Counts characters until null terminator</li>
+        <li>Time complexity: O(n), where n is string length</li>
+        <li>Uses const to ensure input string is not modified</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q3: How do you check if two strings are anagrams?
+    <div class="answer">
+      Two strings are anagrams if they contain the same characters with the same frequencies.
+      <pre><code class="language-c">int areAnagrams(const char *str1, const char *str2) {
+    int count[256] = {0};
+    if (strlen(str1) != strlen(str2)) return 0;
+    for (int i = 0; str1[i] && str2[i]; i++) {
+        count[(unsigned char)str1[i]]++;
+        count[(unsigned char)str2[i]]--;
+    }
+    for (int i = 0; i < 256; i++) {
+        if (count[i] != 0) return 0;
+    }
+    return 1;
+}</code></pre>
+      Key points:
+      <ul>
+        <li>Assumes ASCII character set (256 characters)</li>
+        <li>Time complexity: O(n), where n is string length</li>
+        <li>Space complexity: O(1) for fixed-size array</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q4: How would you implement strcmp()?
+    <div class="answer">
+      Compares two strings lexicographically:
+      <pre><code class="language-c">int strcmp(const char *str1, const char *str2) {
+    while (*str1 && *str1 == *str2) {
+        str1++;
+        str2++;
+    }
+    return *(unsigned char*)str1 - *(unsigned char*)str2;
+}</code></pre>
+      Key points:
+      <ul>
+        <li>Returns negative if str1 < str2, zero if equal, positive if str1 > str2</li>
+        <li>Handles null terminators correctly</li>
+        <li>Time complexity: O(n), where n is length of shorter string</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q5: How do you find the first non-repeating character in a string?
+    <div class="answer">
+      Finds the first character that appears only once:
+      <pre><code class="language-c">char firstNonRepeating(const char *str) {
+    int count[256] = {0};
+    for (int i = 0; str[i]; i++) {
+        count[(unsigned char)str[i]]++;
+    }
+    for (int i = 0; str[i]; i++) {
+        if (count[(unsigned char)str[i]] == 1) return str[i];
+    }
+    return '\0';
+}</code></pre>
+      Key points:
+      <ul>
+        <li>Uses a frequency array for ASCII characters</li>
+        <li>Time complexity: O(n), where n is string length</li>
+        <li>Space complexity: O(1) due to fixed-size array</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q6: How do you check if a string is a palindrome?
+    <div class="answer">
+      Checks if a string reads the same forward and backward:
+      <pre><code class="language-c">int isPalindrome(const char *str) {
+    int left = 0, right = strlen(str) - 1;
+    while (left < right) {
+        if (str[left++] != str[right--]) return 0;
+    }
+    return 1;
+}</code></pre>
+      Key points:
+      <ul>
+        <li>Case-sensitive comparison</li>
+        <li>Time complexity: O(n/2), where n is string length</li>
+        <li>Space complexity: O(1)</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q7: How would you implement strcat()?
+    <div class="answer">
+      Concatenates source string to destination:
+      <pre><code class="language-c">char* strcat(char *dest, const char *src) {
+    char *ret = dest;
+    while (*dest) dest++;
+    while (*dest++ = *src++);
+    return ret;
+}</code></pre>
+      Safe version with bounds checking:
+      <pre><code class="language-c">char* strcat_safe(char *dest, const char *src, size_t size) {
+    char *ret = dest;
+    while (*dest && size--) dest++;
+    if (size == 0) return ret;
+    while (--size && (*dest++ = *src++));
+    *dest = '\0';
+    return ret;
+}</code></pre>
+      Key points:
+      <ul>
+        <li>Assumes dest has enough space in basic version</li>
+        <li>Safe version prevents buffer overflow</li>
+        <li>Time complexity: O(n + m), where n, m are lengths of dest, src</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q8: How do you remove duplicate characters from a string?
+    <div class="answer">
+      Removes duplicates while preserving order:
+      <pre><code class="language-c">void removeDuplicates(char *str) {
+    if (!str) return;
+    int seen[256] = {0};
+    int write = 0;
+    for (int read = 0; str[read]; read++) {
+        if (!seen[(unsigned char)str[read]]) {
+            seen[(unsigned char)str[read]] = 1;
+            str[write++] = str[read];
+        }
+    }
+    str[write] = '\0';
+}</code></pre>
+      Key points:
+      <ul>
+        <li>Uses a boolean array to track seen characters</li>
+        <li>Time complexity: O(n), where n is string length</li>
+        <li>Space complexity: O(1) for fixed-size array</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q9: How do you find the longest substring without repeating characters?
+    <div class="answer">
+      Uses sliding window technique:
+      <pre><code class="language-c">int longestUniqueSubstring(const char *str) {
+    int seen[256] = {-1};
+    int maxLen = 0, start = 0;
+    for (int i = 0; str[i]; i++) {
+        if (seen[(unsigned char)str[i]] >= start) {
+            start = seen[(unsigned char)str[i]] + 1;
+        }
+        seen[(unsigned char)str[i]] = i;
+        maxLen = (i - start + 1) > maxLen ? (i - start + 1) : maxLen;
+    }
+    return maxLen;
+}</code></pre>
+      Key points:
+      <ul>
+        <li>Tracks last position of each character</li>
+        <li>Time complexity: O(n), where n is string length</li>
+        <li>Space complexity: O(1) for fixed-size array</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q10: How do you convert a string to an integer (atoi)?
+    <div class="answer">
+      Converts string to integer with error handling:
+      <pre><code class="language-c">int atoi(const char *str) {
+    int result = 0, sign = 1, i = 0;
+    while (str[i] == ' ') i++;
+    if (str[i] == '-' || str[i] == '+') {
+        sign = (str[i++] == '-') ? -1 : 1;
+    }
+    while (str[i] >= '0' && str[i] <= '9') {
+        if (result > INT_MAX / 10) return (sign == 1) ? INT_MAX : INT_MIN;
+        result = result * 10 + (str[i++] - '0');
+    }
+    return sign * result;
+}</code></pre>
+      Key points:
+      <ul>
+        <li>Handles whitespace, signs, and overflow</li>
+        <li>Time complexity: O(n), where n is string length</li>
+        <li>Stops at first non-digit character</li>
+      </ul>
+    </div>
+  </div>
+</div>
+      <!-- Interview Questions for Dynamic Memory -->
+<div class="question-group" data-section="dynamic" style="display:none;">
+  <div class="question" onclick="toggleAnswer(this)">
+    Q1: What is dynamic memory allocation and why is it used?
+    <div class="answer">
+      Dynamic memory allocation allows programs to request memory at runtime.
+      <pre><code class="language-c">void *malloc(size_t size);</code></pre>
+      Key points:
+      <ul>
+        <li>Memory is allocated from the heap, not the stack</li>
+        <li>Used when size is unknown at compile time (e.g., variable-length arrays)</li>
+        <li>Requires manual deallocation using <code>free()</code></li>
+        <li>Common functions: <code>malloc()</code>, <code>calloc()</code>, <code>realloc()</code></li>
+        <li>Allows efficient memory use for dynamic data structures like linked lists</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q2: How do you properly free dynamically allocated memory?
+    <div class="answer">
+      Use <code>free()</code> to deallocate memory:
+      <pre><code class="language-c">void free(void *ptr);</code></pre>
+      Key points:
+      <ul>
+        <li>Only pass pointers returned by <code>malloc()</code>, <code>calloc()</code>, or <code>realloc()</code></li>
+        <li>Set pointer to NULL after freeing to avoid dangling pointers</li>
+        <li>Double-freeing or freeing invalid pointers causes undefined behavior</li>
+        <li>Example:
+          <pre><code class="language-c">int *ptr = malloc(sizeof(int) * 10);
+if (ptr) {
+    free(ptr);
+    ptr = NULL;
+}</code></pre>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q3: What are the differences between stack and heap memory?
+    <div class="answer">
+      Stack and heap serve different memory allocation purposes:
+      <ul>
+        <li><strong>Stack</strong>: Fixed-size, automatic allocation/deallocation, used for local variables</li>
+        <li><strong>Heap</strong>: Dynamic allocation via <code>malloc()</code>/<code>calloc()</code>, manual deallocation</li>
+        <li>Stack is faster but limited in size; heap is slower but larger</li>
+        <li>Stack memory is scope-bound; heap memory persists until freed</li>
+        <li>Example (heap allocation):
+          <pre><code class="language-c">int *arr = malloc(sizeof(int) * 100);</code></pre>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q4: What happens if you don’t check the return value of malloc()?
+    <div class="answer">
+      Failing to check <code>malloc()</code>’s return value can lead to errors:
+      <pre><code class="language-c">int *ptr = malloc(sizeof(int) * 100);
+if (!ptr) {
+    // Handle allocation failure
+    return -1;
+}</code></pre>
+      Key points:
+      <ul>
+        <li><code>malloc()</code> returns NULL if allocation fails</li>
+        <li>Dereferencing NULL causes undefined behavior (e.g., crashes)</li>
+        <li>Always check return value to ensure memory was allocated</li>
+        <li>Allocation failure can occur due to insufficient memory or fragmentation</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q5: How do you allocate memory for a 2D array dynamically?
+    <div class="answer">
+      Allocate a 2D array using a single block or array of pointers:
+      <pre><code class="language-c">// Single block
+int **create2DArray(int rows, int cols) {
+    int *data = malloc(rows * cols * sizeof(int));
+    int **array = malloc(rows * sizeof(int*));
+    for (int i = 0; i < rows; i++) {
+        array[i] = data + i * cols;
+    }
+    return array;
+}</code></pre>
+      Key points:
+      <ul>
+        <li>Single block improves locality; separate pointers allow non-contiguous rows</li>
+        <li>Free with <code>free(data); free(array);</code></li>
+        <li>Check for NULL after each allocation</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q6: What is a memory leak and how can you detect it?
+    <div class="answer">
+      A memory leak occurs when allocated memory is not freed:
+      <pre><code class="language-c">int *ptr = malloc(sizeof(int) * 10);
+// Memory leak if ptr is not freed before reassignment or program exit
+ptr = malloc(sizeof(int) * 20); // Original memory lost
+</code></pre>
+      Key points:
+      <ul>
+        <li>Causes memory waste, potentially leading to crashes</li>
+        <li>Detect using tools like Valgrind or address sanitizers</li>
+        <li>Prevent by ensuring every <code>malloc()</code> has a corresponding <code>free()</code></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q7: How does calloc() ensure zero-initialized memory?
+    <div class="answer">
+      <code>calloc()</code> allocates and initializes memory to zero:
+      <pre><code class="language-c">void *calloc(size_t num, size_t size);</code></pre>
+      Key points:
+      <ul>
+        <li>Allocates <code>num * size</code> bytes, sets all to zero</li>
+        <li>Useful for arrays or structs needing initialization</li>
+        <li>Slower than <code>malloc()</code> due to initialization</li>
+        <li>Example:
+          <pre><code class="language-c">int *arr = calloc(10, sizeof(int)); // All elements are 0</code></pre>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q8: What are the dangers of dangling pointers in dynamic memory?
+    <div class="answer">
+      Dangling pointers reference freed or invalid memory:
+      <pre><code class="language-c">int *ptr = malloc(sizeof(int) * 10);
+free(ptr);
+// ptr is now dangling; accessing it is undefined behavior
+*ptr = 5; // Dangerous!
+</code></pre>
+      Key points:
+      <ul>
+        <li>Causes undefined behavior like crashes or data corruption</li>
+        <li>Prevent by setting pointers to NULL after <code>free()</code></li>
+        <li>Use tools like Valgrind to detect dangling pointer access</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q9: How do you implement a dynamic array (resizable array)?
+    <div class="answer">
+      A dynamic array grows by reallocating memory:
+      <pre><code class="language-c">typedef struct {
+    int *data;
+    size_t size;
+    size_t capacity;
+} DynamicArray;
+
+void resizeArray(DynamicArray *arr, size_t newCapacity) {
+    int *temp = realloc(arr->data, newCapacity * sizeof(int));
+    if (!temp) return; // Handle failure
+    arr->data = temp;
+    arr->capacity = newCapacity;
+}</code></pre>
+      Key points:
+      <ul>
+        <li>Double capacity when full to amortize costs</li>
+        <li>Time complexity: O(1) amortized for append, O(n) for reallocation</li>
+        <li>Check <code>realloc()</code> return value to avoid memory leaks</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q10: What is memory fragmentation and how does it affect dynamic allocation?
+    <div class="answer">
+      Memory fragmentation occurs when free memory is split into small, non-contiguous blocks:
+      <pre><code class="language-c">int *ptr1 = malloc(1000);
+int *ptr2 = malloc(1000);
+free(ptr1); // Frees memory, but may leave gaps
+int *ptr3 = malloc(1500); // May fail if memory is fragmented
+</code></pre>
+      Key points:
+      <ul>
+        <li><strong>External fragmentation</strong>: Gaps between allocated blocks</li>
+        <li><strong>Internal fragmentation</strong>: Wasted space within allocated blocks</li>
+        <li>Mitigate with memory pools or compacting allocators</li>
+        <li>Can cause allocation failures despite sufficient total free memory</li>
+      </ul>
+    </div>
+  </div>
+</div>
+      <!-- Questions for Pointers & Functions Section -->
+<div class="question-group" data-section="functions" style="display:none;">
+  <div class="question" onclick="toggleAnswer(this)">
+    Q1: How do you pass variables by reference in C?
+    <div class="answer">
+      C uses pass-by-value by default, but you can simulate pass-by-reference using pointers:
+      <pre><code class="language-c">void modify(int *ptr) {
+    *ptr = 10;  // Modifies original variable
+}
+
+int main() {
+    int x = 5;
+    modify(&x);  // Pass address of x
+    printf("%d", x);  // Prints 10
+}</code></pre>
+      Key points:
+      <ul>
+        <li>Use & operator to get address of variable</li>
+        <li>Function accepts pointer parameter</li>
+        <li>Dereference pointer (*) to modify original value</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q2: What are function pointers and how are they declared?
+    <div class="answer">
+      Function pointers store addresses of functions:
+      <pre><code class="language-c">// Declaration
+return_type (*pointer_name)(parameter_types);
+
+// Example
+int (*operation)(int, int);
+
+// Assignment
+operation = &add_function;
+
+// Invocation
+int result = operation(2, 3);</code></pre>
+      Common uses:
+      <ul>
+        <li>Callback mechanisms</li>
+        <li>Strategy pattern implementation</li>
+        <li>Dynamic function dispatch</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q3: How would you implement a generic sort function using function pointers?
+    <div class="answer">
+      Like qsort() from standard library:
+      <pre><code class="language-c">void sort(void *base, size_t nmemb, size_t size,
+          int (*compar)(const void *, const void *)) {
+    // Implementation using compar() for ordering
+}
+
+// Comparison function
+int compare_ints(const void *a, const void *b) {
+    return *(int*)a - *(int*)b;
+}
+
+// Usage
+int arr[] = {5, 2, 8, 1};
+sort(arr, 4, sizeof(int), compare_ints);</code></pre>
+      Key aspects:
+      <ul>
+        <li>void* for generic data handling</li>
+        <li>comparator function defines ordering</li>
+        <li>size parameter handles different data types</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q4: What is wrong with returning a pointer to a local variable?
+    <div class="answer">
+      It creates a dangling pointer:
+      <pre><code class="language-c">int* badFunction() {
+    int x = 10;  // Local variable (stack allocated)
+    return &x;    // DANGER: x will be destroyed
+}                 // when function exits
+
+int main() {
+    int *ptr = badFunction();
+    // ptr now points to invalid memory
+}</code></pre>
+      Problems:
+      <ul>
+        <li>Local variables are destroyed when function returns</li>
+        <li>Pointer references invalid memory</li>
+        <li>Undefined behavior when dereferenced</li>
+        <li>Solution: Return static, global, or heap-allocated memory</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q5: Explain the use of void pointers with functions.
+    <div class="answer">
+      void pointers (void*) enable generic functions:
+      <pre><code class="language-c">// Generic swap function
+void swap(void *a, void *b, size_t size) {
+    char temp[size];  // C99 VLA or use malloc
+    memcpy(temp, a, size);
+    memcpy(a, b, size);
+    memcpy(b, temp, size);
+}
+
+// Usage
+int x = 5, y = 10;
+swap(&x, &y, sizeof(int));</code></pre>
+      Key points:
+      <ul>
+        <li>void* can point to any data type</li>
+        <li>Must cast before dereferencing</li>
+        <li>Size parameter needed for proper memory handling</li>
+        <li>Used in standard functions like qsort, bsearch</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q6: What is a callback function and how is it implemented?
+    <div class="answer">
+      A callback is a function passed as an argument:
+      <pre><code class="language-c">typedef void (*Callback)(int);
+
+void process(Callback cb) {
+    // Do work...
+    cb(result);  // Invoke callback
+}
+
+void myCallback(int value) {
+    printf("Got: %d", value);
+}
+
+int main() {
+    process(myCallback);
+}</code></pre>
+      Characteristics:
+      <ul>
+        <li>Enables inversion of control</li>
+        <li>Used in event handling, asynchronous code</li>
+        <li>Implementations: function pointers, interfaces (OOP)</li>
+        <li>Examples: qsort comparator, signal handlers</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q7: How can you return multiple values from a function in C?
+    <div class="answer">
+      Several approaches:
+      <pre><code class="language-c">// 1. Using pointer parameters
+void getValues(int *a, int *b) {
+    *a = 10;
+    *b = 20;
+}
+
+// 2. Returning a struct
+struct Pair { int a, b; };
+struct Pair getValues() {
+    return (struct Pair){10, 20};
+}
+
+// 3. Using arrays (careful with scope)
+int* getValues() {
+    static int arr[2] = {10, 20};
+    return arr;
+}</code></pre>
+      Best practice depends on context - pointer parameters are most common.
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q8: What is the difference between int* func() and int (*func)()?
+    <div class="answer">
+      They are completely different:
+      <ul>
+        <li><code>int* func()</code>: Function returning integer pointer
+          <pre><code class="language-c">int* createArray() {
+    static int arr[3] = {1,2,3};
+    return arr;
+}</code></pre>
+        </li>
+        <li><code>int (*func)()</code>: Pointer to function returning integer
+          <pre><code class="language-c">int square(int n) { return n*n; }
+int (*func)(int) = &square;
+int result = func(5);  // 25</code></pre>
+        </li>
+        <li>Parentheses change meaning completely</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q9: How would you implement a state machine using function pointers?
+    <div class="answer">
+      Function pointers enable clean state machines:
+      <pre><code class="language-c">typedef void (*State)(void);
+
+void idle() { printf("Idle\n"); }
+void working() { printf("Working\n"); }
+
+int main() {
+    State current = &idle;
+
+    while(1) {
+        current();  // Execute current state
+
+        if(shouldChangeState()) {
+            current = &working;  // Transition
+        }
+    }
+}</code></pre>
+      Benefits:
+      <ul>
+        <li>Clean separation of states</li>
+        <li>Easy to add new states</li>
+        <li>No large switch statements</li>
+        <li>Used in embedded systems, protocol implementations</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q10: What are the advantages of using function pointers?
+    <div class="answer">
+      Function pointers enable:
+      <ul>
+        <li><strong>Runtime polymorphism</strong>: Different behaviors at runtime</li>
+        <li><strong>Callback mechanisms</strong>: Event-driven programming</li>
+        <li><strong>Plugin architectures</strong>: Dynamic functionality</li>
+        <li><strong>Strategy pattern</strong>: Interchangeable algorithms</li>
+        <li><strong>State machines</strong>: Clean state transitions</li>
+        <li><strong>Generic operations</strong>: Like qsort's comparator</li>
+      </ul>
+      Tradeoffs:
+      <ul>
+        <li>Indirection overhead (usually negligible)</li>
+        <li>More complex debugging</li>
+        <li>Potential for null pointer issues</li>
+      </ul>
+    </div>
+  </div>
+</div>
+      <!-- Questions for Pointers & Arrays Section -->
+<div class="question-group" data-section="arrays" style="display:none;">
+  <div class="question" onclick="toggleAnswer(this)">
+    Q1: What is array decay and when does it occur?
+    <div class="answer">
+      Array decay is the conversion of an array name to a pointer to its first element. It occurs when:
+      <ul>
+        <li>Passing an array to a function</li>
+        <li>Assigning an array to a pointer</li>
+        <li>Using an array in most expressions (except with sizeof and & operators)</li>
+      </ul>
+      Example: <code>int arr[5]; int *p = arr;</code> (arr decays to &arr[0])
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q2: How does arr[i] differ from i[arr] in C?
+    <div class="answer">
+      They are equivalent due to pointer arithmetic:
+      <ul>
+        <li><code>arr[i]</code> ≡ <code>*(arr + i)</code></li>
+        <li><code>i[arr]</code> ≡ <code>*(i + arr)</code></li>
+        <li>Both compile to the same machine code</li>
+        <li>Example: <code>int arr[3] = {1,2,3}; printf("%d", 1[arr]);</code> prints 2</li>
+      </ul>
+      While valid, i[arr] is discouraged for readability.
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q3: How would you pass a 2D array to a function?
+    <div class="answer">
+      Three common approaches:
+      <pre><code class="language-c">// 1. Fixed dimensions
+void func(int arr[3][4]) { ... }
+
+// 2. Pointer to array (variable rows, fixed columns)
+void func(int (*arr)[4], int rows) { ... }
+
+// 3. Flat array with manual indexing
+void func(int *arr, int rows, int cols) {
+    // Access as arr[row * cols + col]
+}</code></pre>
+      The second approach is most common when column count is fixed.
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q4: What's the difference between int* arr and int arr[] in function parameters?
+    <div class="answer">
+      They are exactly equivalent in function parameters:
+      <ul>
+        <li>Both declare a pointer parameter</li>
+        <li>The array syntax is just documentation</li>
+        <li>Example: <code>void func(int* arr)</code> and <code>void func(int arr[])</code> are identical</li>
+        <li>Even <code>void func(int arr[10])</code> is the same - the size is ignored</li>
+      </ul>
+      This is specific to function parameters - they differ in declarations elsewhere.
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q5: How can you determine an array's size from a pointer?
+    <div class="answer">
+      You cannot directly determine an array's size from a pointer alone. Solutions:
+      <ul>
+        <li>Pass the size as a separate parameter</li>
+        <li>Use a sentinel value (like NULL for pointers or -1 for numbers)</li>
+        <li>For arrays (not pointers), use <code>sizeof(arr)/sizeof(arr[0])</code></li>
+        <li>Create a struct that contains both the array and its size</li>
+      </ul>
+      This is why standard functions like strlen() must scan for null terminators.
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q6: Explain the difference between int (*ptr)[10] and int *ptr[10].
+    <div class="answer">
+      They are fundamentally different:
+      <ul>
+        <li><code>int (*ptr)[10]</code>: Pointer to an array of 10 integers</li>
+        <li><code>int *ptr[10]</code>: Array of 10 integer pointers</li>
+        <li>Operator precedence matters - [] has higher precedence than *</li>
+        <li>Example uses:
+          <pre><code class="language-c">int arr[10];
+int (*ptr1)[10] = &arr;  // Pointer to whole array
+int *ptr2[10];           // Array of pointers</code></pre>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q7: How would you implement a dynamic 2D array in C?
+    <div class="answer">
+      Two common approaches:
+      <pre><code class="language-c">// 1. Array of pointers to arrays
+int **arr = malloc(rows * sizeof(int*));
+for (int i = 0; i < rows; i++) {
+    arr[i] = malloc(cols * sizeof(int));
+}
+
+// 2. Single allocation with manual indexing
+int *arr = malloc(rows * cols * sizeof(int));
+// Access as arr[row * cols + col]</code></pre>
+      The first allows arr[i][j] syntax but has more overhead. The second is more cache-friendly.
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q8: What is a jagged array and how is it implemented?
+    <div class="answer">
+      A jagged array is an array of arrays where each sub-array can have different lengths:
+      <pre><code class="language-c">int *jagged[3];
+jagged[0] = malloc(2 * sizeof(int));
+jagged[1] = malloc(4 * sizeof(int));
+jagged[2] = malloc(1 * sizeof(int));</code></pre>
+      Characteristics:
+      <ul>
+        <li>Memory efficient for irregular data</li>
+        <li>Allows different row lengths</li>
+        <li>Common in string arrays where strings vary in length</li>
+        <li>Access as jagged[i][j] like a regular 2D array</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q9: Why does sizeof() return different values for arrays and pointers?
+    <div class="answer">
+      Because they are fundamentally different:
+      <ul>
+        <li><code>sizeof(array)</code> returns total bytes for the entire array</li>
+        <li><code>sizeof(pointer)</code> returns size of the pointer variable (typically 4 or 8 bytes)</li>
+        <li>Example:
+          <pre><code class="language-c">int arr[10];
+int *ptr = arr;
+printf("%zu %zu", sizeof(arr), sizeof(ptr));
+// Typical output: "40 8" (on 64-bit system)</code></pre>
+        </li>
+        <li>Array size information is lost when array decays to pointer</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="question" onclick="toggleAnswer(this)">
+    Q10: How can you prevent array decay when passing to functions?
+    <div class="answer">
+      To prevent decay (preserve size information):
+      <pre><code class="language-c">// 1. Pass by reference (C++ only)
+void func(int (&arr)[10]) { ... }
+
+// 2. Pass pointer to array
+void func(int (*arr)[10]) { ... }
+
+// 3. Use a struct wrapper
+typedef struct {
+    int arr[10];
+} ArrayWrapper;
+void func(ArrayWrapper a) { ... }</code></pre>
+      In C, the second approach is most common when you need to preserve array size.
+    </div>
+  </div>
+</div>
+    <!-- Questions for Introduction Section -->
+    <div class="question-group" data-section="intro">
+      <div class="question" onclick="toggleAnswer(this)">
+        Q1: What is a pointer and how does it differ from a normal variable?
+        <div class="answer">
+          A pointer is a variable that stores a memory address rather than a direct value. Unlike normal variables that hold data, pointers hold locations where data is stored. This provides indirection - the ability to reference and manipulate data through memory addresses rather than directly.
+        </div>
+      </div>
+
+      <div class="question" onclick="toggleAnswer(this)">
+        Q2: Explain the difference between * and & operators.
+        <div class="answer">
+          <ul>
+            <li><code>&</code> (address-of operator): Returns the memory address of a variable.</li>
+            <li><code>*</code> (dereference operator): Accesses the value at a memory address stored in a pointer.</li>
+            <li>Example: <code>int x = 10; int *p = &x;</code> (p holds address of x), <code>int y = *p;</code> (y gets value 10).</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="question" onclick="toggleAnswer(this)">
+        Q3: What is a void pointer and when would you use it?
+        <div class="answer">
+          A void pointer (<code>void*</code>) is a generic pointer that can point to any data type. Key points:
+          <ul>
+            <li>Cannot be dereferenced directly - must be cast to appropriate type first</li>
+            <li>Used in generic functions like <code>memcpy</code>, <code>qsort</code></li>
+            <li>Allows writing functions that work with different data types</li>
+            <li>Example: <code>void *ptr = &amp;x; printf("%d", *(int*)ptr);</code></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="question" onclick="toggleAnswer(this)">
+        Q4: What is pointer arithmetic and how does it work?
+        <div class="answer">
+          Pointer arithmetic allows mathematical operations on pointers, with operations scaled by the size of the pointed-to type:
+          <ul>
+            <li><code>ptr + n</code> advances pointer by <code>n * sizeof(type)</code> bytes</li>
+            <li><code>ptr - n</code> moves pointer back by <code>n * sizeof(type)</code> bytes</li>
+            <li>Subtracting pointers gives number of elements between them</li>
+            <li>Example: For <code>int *p</code>, <code>p++</code> advances 4 bytes (typical int size)</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="question" onclick="toggleAnswer(this)">
+        Q5: What is a dangling pointer and how can you avoid it?
+        <div class="answer">
+          A dangling pointer points to memory that has been freed. Risks:
+          <ul>
+            <li>Accessing freed memory leads to undefined behavior</li>
+            <li>Can cause crashes or security vulnerabilities</li>
+            <li>Prevention methods:
+              <ul>
+                <li>Set pointer to NULL after freeing</li>
+                <li>Avoid returning pointers to local variables</li>
+                <li>Use smart pointers in C++ (RAII)</li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="question" onclick="toggleAnswer(this)">
+        Q6: Explain the relationship between arrays and pointers.
+        <div class="answer">
+          Arrays and pointers are closely related in C:
+          <ul>
+            <li>Array name decays to pointer to first element in most contexts</li>
+            <li><code>arr[i]</code> is equivalent to <code>*(arr + i)</code></li>
+            <li>Key differences:
+              <ul>
+                <li><code>sizeof(arr)</code> gives array size, <code>sizeof(ptr)</code> gives pointer size</li>
+                <li>Array name is constant pointer (can't be reassigned)</li>
+                <li>Pointer can point to different locations</li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="question" onclick="toggleAnswer(this)">
+        Q7: What are function pointers and how are they used?
+        <div class="answer">
+          Function pointers store addresses of functions:
+          <ul>
+            <li>Declaration: <code>int (*func_ptr)(int, int);</code></li>
+            <li>Assignment: <code>func_ptr = &amp;add;</code> (where add is a function)</li>
+            <li>Invocation: <code>int result = func_ptr(2, 3);</code></li>
+            <li>Common uses:
+              <ul>
+                <li>Callback functions</li>
+                <li>Implementing state machines</li>
+                <li>Plugin architectures</li>
+                <li>Polymorphism in C</li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="question" onclick="toggleAnswer(this)">
+        Q8: What is the difference between const int*, int const*, and int *const?
+        <div class="answer">
+          <ul>
+            <li><code>const int*</code> or <code>int const*</code>: Pointer to constant data (can't modify data through pointer)</li>
+            <li><code>int *const</code>: Constant pointer (can't change pointer to point elsewhere)</li>
+            <li><code>const int *const</code>: Constant pointer to constant data</li>
+            <li>Memory aid: const applies to whatever is on its immediate left (or right if nothing on left)</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="question" onclick="toggleAnswer(this)">
+        Q9: How do you dynamically allocate memory in C?
+        <div class="answer">
+          Dynamic memory allocation uses these functions:
+          <ul>
+            <li><code>malloc(size)</code>: Allocates raw memory (uninitialized)</li>
+            <li><code>calloc(count, size)</code>: Allocates and zero-initializes memory</li>
+            <li><code>realloc(ptr, new_size)</code>: Resizes existing allocation</li>
+            <li><code>free(ptr)</code>: Releases allocated memory</li>
+            <li>Always check for NULL return from allocation functions</li>
+            <li>Example: <code>int *arr = malloc(10 * sizeof(int));</code></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="question" onclick="toggleAnswer(this)">
+        Q10: What is the restrict keyword in C?
+        <div class="answer">
+          The <code>restrict</code> qualifier tells the compiler that a pointer is the only way to access the pointed-to data:
+          <ul>
+            <li>Enables compiler optimizations by assuming no pointer aliasing</li>
+            <li>Only use when you can guarantee no other pointers access the same data</li>
+            <li>Example: <code>void copy(int *restrict dest, int *restrict src, int n);</code></li>
+            <li>Violating restrict assumptions leads to undefined behavior</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Questions for Pointer Arithmetic Section -->
+    <div class="question-group" data-section="arithmetic" style="display:none;">
+      <div class="question" onclick="toggleAnswer(this)">
+        Q1: Why does pointer arithmetic scale by the size of the pointed-to type?
+        <div class="answer">
+          Pointer arithmetic scales by type size to maintain logical element addressing:
+          <ul>
+            <li>Ensures <code>ptr + 1</code> always points to the next element</li>
+            <li>Matches programmer's mental model of array traversal</li>
+            <li>Eliminates manual offset calculations</li>
+            <li>Example: <code>int *p</code> with <code>p++</code> advances 4 bytes (typical int size)</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="question" onclick="toggleAnswer(this)">
+        Q2: How would you implement a generic array search using pointer arithmetic?
+        <div class="answer">
+          <pre><code class="language-c">void* search(void *arr, void *key, size_t n, size_t size,
+              int (*compare)(const void*, const void*)) {
+    char *ptr = arr;
+    for (size_t i = 0; i < n; i++) {
+        if (compare(ptr + i * size, key) == 0) {
+            return ptr + i * size;
+        }
+    }
+    return NULL;
+}</code></pre>
+          Key points:
+          <ul>
+            <li>Uses <code>char*</code> for byte-level arithmetic</li>
+            <li><code>size</code> parameter handles different element sizes</li>
+            <li>Comparator function enables type-flexible comparisons</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="question" onclick="toggleAnswer(this)">
+        Q3: What happens when you subtract two pointers to different arrays?
+        <div class="answer">
+          Subtracting pointers to different arrays is undefined behavior:
+          <ul>
+            <li>Standard only defines pointer difference within same array</li>
+            <li>May produce meaningless results or crash</li>
+            <li>Example: <code>int arr1[5], arr2[5]; int diff = &arr2[3] - &arr1[1];</code> is invalid</li>
+            <li>Safe alternative: Use array indices or container-specific methods</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="question" onclick="toggleAnswer(this)">
+        Q4: Explain how pointer arithmetic relates to array indexing.
+        <div class="answer">
+          Array indexing is syntactic sugar for pointer arithmetic:
+          <ul>
+            <li><code>arr[i]</code> ≡ <code>*(arr + i)</code></li>
+            <li>Compiler converts both to same machine code</li>
+            <li>Pointer version sometimes more efficient in loops</li>
+            <li>Example: <code>for (p = arr; p < arr + n; p++)</code> vs <code>for (i = 0; i < n; i++)</code></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="question" onclick="toggleAnswer(this)">
+        Q5: How can pointer arithmetic cause memory alignment issues?
+        <div class="answer">
+          Alignment problems occur when:
+          <ul>
+            <li>Pointer arithmetic creates misaligned addresses</li>
+            <li>Certain architectures (ARM, RISC-V) require aligned access</li>
+            <li>Example: <code>int *p = (int*)((char*)arr + 1);</code> may crash on read</li>
+            <li>Solution: Use compiler attributes (<code>__attribute__((aligned))</code>) or unions</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="question" onclick="toggleAnswer(this)">
+        Q6: What is the difference between ptr++ and ++ptr?
+        <div class="answer">
+          Both increment the pointer, but with different evaluation timing:
+          <ul>
+            <li><code>ptr++</code>: Post-increment - returns original value then increments</li>
+            <li><code>++ptr</code>: Pre-increment - increments then returns new value</li>
+            <li>Example: <code>int x = *ptr++;</code> gets value then moves vs <code>int x = *++ptr;</code> moves then gets value</li>
+            <li>Same pointer arithmetic occurs, just different evaluation order</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="question" onclick="toggleAnswer(this)">
+        Q7: How would you implement a circular buffer using pointer arithmetic?
+        <div class="answer">
+          <pre><code class="language-c">typedef struct {
+    char *buffer;
+    char *read_ptr;
+    char *write_ptr;
+    size_t capacity;
+} CircularBuffer;
+
+void write_byte(CircularBuffer *cb, char data) {
+    *cb->write_ptr++ = data;
+    if (cb->write_ptr == cb->buffer + cb->capacity) {
+        cb->write_ptr = cb->buffer;  // Wrap around
+    }
+}</code></pre>
+          Key aspects:
+          <ul>
+            <li>Pointer arithmetic handles position tracking</li>
+            <li>Comparison with buffer end detects wrap-around</li>
+            <li>Reset pointers to buffer start when reaching end</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="question" onclick="toggleAnswer(this)">
+        Q8: What's the difference between *(ptr + 1) and *ptr + 1?
+        <div class="answer">
+          These are fundamentally different operations:
+          <ul>
+            <li><code>*(ptr + 1)</code>: Pointer arithmetic - accesses memory at next element</li>
+            <li><code>*ptr + 1</code>: Dereference then addition - adds 1 to the pointed-to value</li>
+            <li>Example: If <code>ptr</code> points to 10 in array [10,20,30]:
+              <ul>
+                <li><code>*(ptr + 1)</code> → 20 (next element)</li>
+                <li><code>*ptr + 1</code> → 11 (10 + 1)</li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="question" onclick="toggleAnswer(this)">
+        Q9: How would you reverse an array in-place using pointer arithmetic?
+        <div class="answer">
+          <pre><code class="language-c">void reverse(int *start, int *end) {
+    while (start < end) {
+        int temp = *start;
+        *start++ = *end;
+        *end-- = temp;
+    }
+}
+
+// Usage: reverse(arr, arr + n - 1);</code></pre>
+          Features:
+          <ul>
+            <li>Uses two pointers moving toward each other</li>
+            <li>Pointer arithmetic for traversal</li>
+            <li>Swaps elements until pointers meet in middle</li>
+            <li>Efficient O(n) time, O(1) space</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="question" onclick="toggleAnswer(this)">
+        Q10: Why can't you perform division or multiplication on pointers?
+        <div class="answer">
+          Pointer division/multiplication is prohibited because:
+          <ul>
+            <li>No meaningful semantic interpretation in memory context</li>
+            <li>Would break the array-element relationship</li>
+            <li>Could create invalid or misaligned addresses</li>
+            <li>Example: If <code>ptr * 2</code> were allowed, where would it point?</li>
+            <li>Alternative: Cast to integer type if needed (though generally discouraged)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+
+  <script>
+// Show/hide sections
+function showSection(sectionId) {
+  document.querySelectorAll('.page, .section').forEach(section => {
+    section.style.display = 'none';
+  });
+  document.getElementById(sectionId).style.display = 'block';
+}
+
+// Pointer-to-Pointer Animation
+function startPointerToPointer() {
+  const canvas = document.getElementById('pointerToPointerCanvas');
+  const ctx = canvas.getContext('2d');
+  let step = 0;
+
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.font = '16px Consolas';
+    ctx.textAlign = 'center';
+
+    ctx.fillStyle = '#1e1b4b';
+    ctx.strokeStyle = '#0ea5e9';
+    ctx.lineWidth = 2;
+
+    ctx.fillRect(50, 50, 100, 50);
+    ctx.strokeRect(50, 50, 100, 50);
+    ctx.fillRect(200, 50, 100, 50);
+    ctx.strokeRect(200, 50, 100, 50);
+    ctx.fillRect(350, 50, 100, 50);
+    ctx.strokeRect(350, 50, 100, 50);
+
+    ctx.fillStyle = '#facc15';
+    ctx.fillText('x = 42', 100, 80);
+    ctx.fillText('p = &x', 250, 80);
+    ctx.fillText('pp = &p', 400, 80);
+
+    if (step === 1) {
+      ctx.strokeStyle = '#4ade80';
+      ctx.beginPath();
+      ctx.moveTo(250, 50);
+      ctx.lineTo(100, 50);
+      ctx.stroke();
+      ctx.fillStyle = '#7dd3fc';
+      ctx.fillText('p → x', 250, 120);
+    } else if (step === 2) {
+      ctx.strokeStyle = '#f472b6';
+      ctx.beginPath();
+      ctx.moveTo(400, 50);
+      ctx.lineTo(250, 50);
+      ctx.stroke();
+      ctx.fillStyle = '#f472b6';
+      ctx.fillText('pp → p', 400, 120);
+    } else if (step === 3) {
+      ctx.fillStyle = '#facc15';
+      ctx.fillText('**pp = 100 modifies x', 250, 140);
+      ctx.fillStyle = '#34d399';
+      ctx.fillText('x = 100', 100, 80);
+    }
+
+    if (step < 3) {
+      step++;
+      setTimeout(draw, 2000);
+    }
+  }
+
+  draw();
+}
+
+// Array Traversal Animation
+function startArrayTraversal() {
+  const canvas = document.getElementById('arrayTraversalCanvas');
+  const ctx = canvas.getContext('2d');
+  let index = 0;
+  const array = [10, 20, 30, 40, 50];
+
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.font = '16px Consolas';
+    ctx.textAlign = 'center';
+
+    for (let i = 0; i < array.length; i++) {
+      ctx.fillStyle = i === index ? '#0ea5e9' : '#1f2937';
+      ctx.strokeStyle = '#0ea5e9';
+      ctx.lineWidth = 2;
+      ctx.fillRect(50 + i * 100, 50, 80, 50);
+      ctx.strokeRect(50 + i * 100, 50, 80, 50);
+
+      ctx.fillStyle = '#facc15';
+      ctx.fillText(array[i], 90 + i * 100, 80);
+    }
+
+    ctx.fillStyle = '#34d399';
+    ctx.fillText('ptr', 90 + index * 100, 30);
+    ctx.beginPath();
+    ctx.moveTo(90 + index * 100, 40);
+    ctx.lineTo(90 + index * 100, 50);
+    ctx.strokeStyle = '#34d399';
+    ctx.stroke();
+
+    ctx.fillStyle = '#93c5fd';
+    ctx.fillText(`ptr → ${array[index]}`, 300, 120);
+    ctx.fillText(`ptr++`, 300, 140);
+
+    if (index < array.length - 1) {
+      index++;
+      setTimeout(draw, 2000);
+    }
+  }
+
+  draw();
+}
+
+// Function Call Animation
+function startFunctionCall() {
+  const canvas = document.getElementById('functionCallCanvas');
+  const ctx = canvas.getContext('2d');
+  let step = 0;
+
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.font = '16px Consolas';
+    ctx.textAlign = 'center';
+
+    ctx.fillStyle = '#1e293b';
+    ctx.strokeStyle = '#0ea5e9';
+    ctx.lineWidth = 2;
+
+    ctx.fillRect(50, 30, 100, 50);
+    ctx.strokeRect(50, 30, 100, 50);
+    ctx.fillRect(200, 30, 100, 50);
+    ctx.strokeRect(200, 30, 100, 50);
+    ctx.fillRect(50, 100, 250, 50);
+    ctx.strokeRect(50, 100, 250, 50);
+
+    ctx.fillStyle = '#facc15';
+    if (step < 2) {
+      ctx.fillText('x = 5', 100, 60);
+      ctx.fillText('y = 10', 250, 60);
+    } else {
+      ctx.fillText('x = 10', 100, 60);
+      ctx.fillText('y = 5', 250, 60);
+    }
+
+    ctx.fillStyle = '#93c5fd';
+    ctx.fillText('swap(&x, &y)', 175, 130);
+
+    if (step === 1) {
+      ctx.strokeStyle = '#4ade80';
+      ctx.beginPath();
+      ctx.moveTo(175, 100);
+      ctx.lineTo(100, 30);
+      ctx.moveTo(175, 100);
+      ctx.lineTo(250, 30);
+      ctx.stroke();
+
+      ctx.fillStyle = '#38bdf8';
+      ctx.fillText('Addresses passed', 300, 160);
+    } else if (step === 2) {
+      ctx.fillStyle = '#f472b6';
+      ctx.fillText('After swap: x = 10, y = 5', 300, 160);
+    }
+
+    if (step < 2) {
+      step++;
+      setTimeout(draw, 2000);
+    }
+  }
+
+  draw();
+}
+
+// Linked List Full Animation (create, traverse, delete)
+function startLinkedListAnimation() {
+  const canvas = document.getElementById('linkedListCanvas');
+  const ctx = canvas.getContext('2d');
+  const list = [1, 2, 3, 4];
+  let step = 0;
+
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.font = '16px Consolas';
+    ctx.textAlign = 'center';
+
+    for (let i = 0; i < list.length; i++) {
+      const x = 50 + i * 140;
+      const isActive = i <= step;
+
+      ctx.fillStyle = isActive ? '#1e40af' : '#1f2937';
+      ctx.strokeStyle = '#0ea5e9';
+      ctx.lineWidth = 2;
+
+      ctx.fillRect(x, 50, 100, 50);
+      ctx.strokeRect(x, 50, 100, 50);
+
+      ctx.fillStyle = '#facc15';
+      ctx.fillText(`val: ${list[i]}`, x + 50, 70);
+      ctx.fillStyle = '#93c5fd';
+      ctx.fillText(`ptr: ${i === 0 ? 'head' : 'p'+i}`, x + 50, 90);
+
+      if (i < step && i < list.length - 1) {
+        ctx.strokeStyle = '#22c55e';
+        ctx.beginPath();
+        ctx.moveTo(x + 100, 75);
+        ctx.lineTo(x + 140, 75);
+        ctx.lineTo(x + 135, 70);
+        ctx.moveTo(x + 140, 75);
+        ctx.lineTo(x + 135, 80);
+        ctx.stroke();
+      }
+    }
+
+    ctx.fillStyle = '#7dd3fc';
+    if (step < list.length) {
+      ctx.fillText(`Traversing node ${step + 1}`, canvas.width / 2, 140);
+    } else if (step === list.length) {
+      ctx.fillText('Deleting head node', canvas.width / 2, 140);
+    } else if (step === list.length + 1) {
+      ctx.fillText('Deleting last node', canvas.width / 2, 140);
+    }
+
+    if (step <= list.length + 1) {
+      step++;
+      setTimeout(draw, 1500);
+    }
+  }
+
+  draw();
+}
+
+// Default section
+showSection('pointer-animation');
+
+
+    // Function to show questions for current section
+    function showQuestionsForSection(sectionId) {
+      // Hide all question groups first
+      document.querySelectorAll('.question-group').forEach(group => {
+        group.style.display = 'none';
+      });
+
+      // Show the group for current section
+      const targetGroup = document.querySelector(`.question-group[data-section="${sectionId}"]`);
+      if (targetGroup) {
+        targetGroup.style.display = 'block';
+
+        // Make sure all questions in this group are visible
+        targetGroup.querySelectorAll('.question').forEach((q, index) => {
+          q.style.display = 'block';
+        });
+      }
+    }
+
+    // Track current section during scroll
+    window.addEventListener('scroll', function() {
+      const scrollPosition = window.scrollY;
+      const sections = document.querySelectorAll('section');
+
+      sections.forEach(section => {
+        const sectionTop = section.offsetTop - 100;
+        const sectionHeight = section.offsetHeight;
+        const sectionId = section.id;
+
+        if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+          // Update active nav link
+          document.querySelectorAll('nav a').forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href') === `#${sectionId}`) {
+              link.classList.add('active');
+            }
+          });
+
+          // Update questions
+          showQuestionsForSection(sectionId);
+        }
+      });
+    });
+
+    // Initialize with first section's questions
+    document.addEventListener('DOMContentLoaded', function() {
+      showQuestionsForSection('intro');
+
+      // Set up click handlers for nav links
+      document.querySelectorAll('nav a').forEach(link => {
+        link.addEventListener('click', function(e) {
+          e.preventDefault();
+          const targetId = this.getAttribute('href').substring(1);
+          const targetSection = document.getElementById(targetId);
+
+          if (targetSection) {
+            window.scrollTo({
+              top: targetSection.offsetTop - 90,
+              behavior: 'smooth'
+            });
+
+            // Update questions immediately
+            showQuestionsForSection(targetId);
+          }
+        });
+      });
+    });
+
+    // Toggle answer visibility
+    function toggleAnswer(question) {
+      const answer = question.querySelector('.answer');
+      answer.style.display = answer.style.display === 'block' ? 'none' : 'block';
+    }
+
+    // Theme toggle functionality
+    document.getElementById('themeToggle').addEventListener('click', function() {
+      document.body.classList.toggle('light-theme');
+      const icon = this.querySelector('i');
+      icon.className = document.body.classList.contains('light-theme') ? 'fas fa-sun' : 'fas fa-moon';
+      localStorage.setItem('theme', document.body.classList.contains('light-theme') ? 'light' : 'dark');
+    });
+
+    // Mobile menu toggle
+    document.getElementById('menuToggle').addEventListener('click', function() {
+      document.getElementById('mainNav').classList.toggle('active');
+    });
+
+    // Apply saved theme
+    if (localStorage.getItem('theme') === 'light') {
+      document.body.classList.add('light-theme');
+      document.getElementById('themeToggle').querySelector('i').className = 'fas fa-sun';
+    }
+    function sendFeedbackEmail() {
+    const projectName = 'Master Guide to Pointers in C';
+    const subject = `${projectName} Feedback!`;
+    const body = `Hey Kunal,%0D%0A%0D%0AI'm using your ${projectName} and wanted to share some thoughts:%0D%0A%0D%0A🚀 My favorite features:%0D%0A💡 Suggestions for improvement:%0D%0A🐞 Any issues encountered:%0D%0A%0D%0AAdditional notes:%0D%0A%0D%0ABest regards,%0D%0A[Your Name]`;
+
+    window.open(
+        `https://mail.google.com/mail/?view=cm&fs=1&to=kunalsaraswat@gmail.com&su=${encodeURIComponent(subject)}&body=${body}`,
+        '_blank'
+    );
+}
+function startHeapAnimation() {
+  const canvas = document.getElementById('heapCanvas');
+  const ctx = canvas.getContext('2d');
+  const heap = [23, 45, 12, 9, 30];
+  let step = 0;
+
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.font = '16px Consolas';
+    ctx.textAlign = 'center';
+
+    const startX = 50;
+    const spacing = 120;
+    const boxWidth = 100;
+    const boxHeight = 50;
+
+    for (let i = 0; i < heap.length; i++) {
+      const x = startX + i * spacing;
+      const y = 80;
+      const isActive = i <= step;
+
+      // Box styles
+      ctx.fillStyle = isActive ? '#854d0e' : '#1f2937';     // brown for active, dark for future
+      ctx.strokeStyle = '#facc15';                         // yellow border
+      ctx.lineWidth = 2;
+      ctx.fillRect(x, y, boxWidth, boxHeight);
+      ctx.strokeRect(x, y, boxWidth, boxHeight);
+
+      // Value text
+      ctx.fillStyle = '#facc15';
+      ctx.fillText(`val: ${heap[i]}`, x + 50, y + 20);
+
+      // Label
+      ctx.fillStyle = '#93c5fd';
+      ctx.fillText(`heap[${i}]`, x + 50, y + 40);
+
+      // Arrow from parent
+      if (i !== 0 && i <= step) {
+        const parent = Math.floor((i - 1) / 2);
+        const parentX = startX + parent * spacing;
+        ctx.strokeStyle = '#22c55e'; // green arrow
+        ctx.beginPath();
+        ctx.moveTo(parentX + 50, y + boxHeight);
+        ctx.lineTo(x + 50, y);
+        ctx.stroke();
+      }
+    }
+
+    // Status message
+    ctx.fillStyle = '#7dd3fc';
+    if (step < heap.length) {
+      ctx.fillText(`Allocating heap[${step}]`, canvas.width / 2, 170);
+    } else {
+      ctx.fillText(`Heap fully allocated`, canvas.width / 2, 170);
+    }
+
+    if (step <= heap.length) {
+      step++;
+      setTimeout(draw, 1500);
+    }
+  }
+
+  draw();
+}
+
+      function showManual() {
+    const modal = document.createElement('div');
+    modal.id = 'manualModal';
+    modal.innerHTML = `
+        <div class="manual-content">
+            <span class="close-manual" onclick="closeManual()">&times;</span>
+            <div class="manual-header">
+                <h2><i class="fas fa-book-open"></i> Kunal's Pointer Blitz: Complete Manual</h2>
+                <div class="version-tag">v2.0</div>
+            </div>
+            <div class="manual-tabs">
+                <button class="tab-btn active" onclick="switchManualTab('guide')">Guide</button>
+                <button class="tab-btn" onclick="switchManualTab('shortcuts')">Shortcuts</button>
+                <button class="tab-btn" onclick="switchManualTab('contact')">Contact</button>
+            </div>
+            <div id="manual-tab-content" class="manual-tab-content">
+                ${getManualContent('guide')}
+            </div>
+        </div>
+    `;
+    document.body.appendChild(modal);
+    modal.style.display = 'block';
+    document.body.style.overflow = 'hidden';
+}
+
+function getManualContent(tab = 'guide') {
+    switch(tab) {
+        case 'guide':
+            return `
+                <div class="manual-section">
+                    <h3><i class="fas fa-rocket"></i> Getting Started</h3>
+                    <div class="manual-features">
+                        <div class="feature">
+                            <i class="fas fa-project-diagram"></i>
+                            <h4>Interactive Animations</h4>
+                            <p>Visualize pointer operations in Section 16</p>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-code"></i>
+                            <h4>Runnable Examples</h4>
+                            <p>100+ code snippets with explanations</p>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-question"></i>
+                            <h4>Interview Prep</h4>
+                            <p>150+ questions with detailed answers</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="manual-section">
+                    <h3><i class="fas fa-compass"></i> Navigation</h3>
+                    <div class="nav-guide">
+                        <div class="nav-item">
+                            <i class="fas fa-bars"></i>
+                            <div>
+                                <h4>Left Sidebar</h4>
+                                <p>Access all 16 sections organized by difficulty</p>
+                            </div>
+                        </div>
+                        <div class="nav-item">
+                            <i class="fas fa-question-circle"></i>
+                            <div>
+                                <h4>Interview Panel</h4>
+                                <p>Right sidebar with categorized questions</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="manual-section">
+                    <h3><i class="fas fa-road"></i> Learning Paths</h3>
+                    <div class="pathway beginner">
+                        <h4><i class="fas fa-user-graduate"></i> Beginner</h4>
+                        <ol>
+                            <li>Section 1: Pointer Basics</li>
+                            <li>Section 2: Pointer Arithmetic</li>
+                            <li>Section 3: Arrays & Pointers</li>
+                            <li>Section 4: Functions & Pointers</li>
+                        </ol>
+                    </div>
+                    <div class="pathway advanced">
+                        <h4><i class="fas fa-user-ninja"></i> Advanced</h4>
+                        <ul>
+                            <li>Section 6: Dynamic Memory</li>
+                            <li>Section 8: Typecasting</li>
+                            <li>Section 12: Volatile</li>
+                            <li>Section 15: Multi-dim Arrays</li>
+                        </ul>
+                    </div>
+                </div>
+            `;
+
+        case 'shortcuts':
+            return `
+                <div class="manual-section">
+                    <h3><i class="fas fa-keyboard"></i> Keyboard Shortcuts</h3>
+                    <div class="shortcut-list">
+                        <div class="shortcut-item">
+                            <kbd>Esc</kbd>
+                            <span>Close any dialog</span>
+                        </div>
+                        <div class="shortcut-item">
+                            <kbd>Ctrl</kbd> + <kbd>F</kbd>
+                            <span>Search page</span>
+                        </div>
+                        <div class="shortcut-item">
+                            <kbd>Click</kbd>
+                            <span>Toggle interview answers</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+        case 'contact':
+            return `
+                <div class="manual-section">
+                    <h3><i class="fas fa-envelope"></i> Contact & Support</h3>
+                    <div class="contact-methods">
+                        <a href="mailto:kunalsaraswat30@gmail.com" class="contact-link">
+                            <i class="fas fa-envelope"></i>
+                            kunalsaraswat30@gmail.com
+                        </a>
+                        <a href="https://linkedin.com/in/kunalsaraswat" target="_blank" class="contact-link">
+                            <i class="fab fa-linkedin"></i>
+                            LinkedIn Profile
+                        </a>
+                    </div>
+                    <div class="feedback-note">
+                        <i class="fas fa-comment-alt"></i>
+                        <p>Use the <strong>Feedback</strong> button in the header to report issues or suggest improvements</p>
+                    </div>
+                </div>
+            `;
+
+        default:
+            return getManualContent('guide');
+    }
+}
+// Get elements
+  const manualBtn = document.querySelector('a.button[href="#"]:nth-child(2)'); // Manual button
+  const manualModal = document.getElementById('manualModal');
+  const closeManual = document.getElementById('closeManual');
+  const contactFromManual = document.getElementById('contactFromManual');
+  const contactModal = document.getElementById('contactModal'); // Assuming contact modal from previous response
+
+  // Open Manual Modal
+  manualBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    manualModal.style.display = 'block';
+  });
+
+  // Close Manual Modal
+  closeManual.addEventListener('click', () => {
+    manualModal.style.display = 'none';
+  });
+
+  // Open Contact Modal from Manual
+  contactFromManual.addEventListener('click', (e) => {
+    e.preventDefault();
+    manualModal.style.display = 'none'; // Close manual modal
+    contactModal.style.display = 'block'; // Open contact modal
+  });
+
+
+// View counter - simple version (client-side only)
+document.addEventListener('DOMContentLoaded', () => {
+    const viewCountElement = document.getElementById('viewCount');
+    let views = localStorage.getItem('pageViews') || 0;
+    views = parseInt(views) + 1;
+    localStorage.setItem('pageViews', views);
+    viewCountElement.textContent = views.toLocaleString();
+});
+
+        if (!sessionStorage.getItem("paidUser")) {
+  setTimeout(() => {
+    window.location.href = "payment.html"; // Adjust if needed
+  }, 5 * 60 * 1000); // 2 minutes
+}
+</script>
+</body>
+</html>
